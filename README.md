@@ -1,2 +1,2 @@
 # nodejs-sandbox
-node.JS sandbox
+Node.js sandbox for development testing purposes.
