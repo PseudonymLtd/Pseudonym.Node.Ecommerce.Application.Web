@@ -1,0 +1,22 @@
+.products {
+    display: inline-table;
+    margin: 5px;
+}
+
+.products .product {
+    border: 1px solid #FF9800;
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    float: left;
+    height: 200px;
+    font-family: calibri;
+    background-color: #FFE4C4;
+}
+.product .description {
+    overflow-y: scroll;
+    max-height: 99px;
+    min-height: 99px;
+    border: 1px dashed #FF9800;
+    background-color: #FFFFFF;
+}
