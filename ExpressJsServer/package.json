@@ -1,0 +1,26 @@
+{
+  "name": "express.js-server",
+  "version": "1.0.0",
+  "description": "A Express.Js Node Server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PseudonymLtd/nodejs-sandbox.git"
+  },
+  "keywords": [
+    "sandbox"
+  ],
+  "author": "Tom Day",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PseudonymLtd/nodejs-sandbox/issues"
+  },
+  "homepage": "https://github.com/PseudonymLtd/nodejs-sandbox#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
