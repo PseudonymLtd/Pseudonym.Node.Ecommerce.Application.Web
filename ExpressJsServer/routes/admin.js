@@ -1,0 +1,36 @@
+const fs = require('fs');
+const express = require('express');
+const logging = require('../logging');
+
+const router = express.Router();
+const logger = new logging.Logger('Admin');
+
+router.get('/add-product', (request, response, next) => {
+    response.render('add-product', {
+        docTitle: 'Add Product',
+        activeAddProduct: true
+    });
+    return logger.debug('Request Ended');
+});
+
+router.post('/add-product', (request, response, next) => {
+    fs.readFile('data/products.json', (err, data) => {
+        if (err === null) {
+
+            const products = JSON.parse(data.toString());
+            products.push(request.body);
+
+            return fs.writeFile('data/products.json', JSON.stringify(products), (err) => {
+                if (err === null) {
+                    response.redirect('/');
+
+                    return logger.debug('Request Ended');
+                }
+                throw err;
+            });
+        }
+        throw err;
+    });
+});
+
+module.exports = router;
