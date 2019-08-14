@@ -10,7 +10,7 @@ router.get('/add-product', (request, response, next) => {
 
     rendering.render(response, 'add-product', 'Add Product');
 
-    return logger.debug('Request Ended');
+    return logger.debug('Page Served');
 });
 
 router.post('/add-product', (request, response, next) => {
@@ -22,9 +22,9 @@ router.post('/add-product', (request, response, next) => {
 
             return fs.writeFile('data/products.json', JSON.stringify(products), (err) => {
                 if (err === null) {
-                    response.redirect('/');
-
-                    return logger.debug('Request Ended');
+                    logger.info(`Added new object:`);
+                    console.info(request.body);
+                    return response.redirect('/');
                 }
                 throw err;
             });

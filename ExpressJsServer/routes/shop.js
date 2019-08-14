@@ -16,7 +16,7 @@ router.get('/', (request, response, next) =>
             
             rendering.render(response, 'shop', 'Shop', { products: products });
 
-            return logger.debug('Request Ended');
+            return logger.debug('Page Served');
         }
         throw err;
     });
