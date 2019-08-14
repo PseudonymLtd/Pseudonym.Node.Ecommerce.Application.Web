@@ -1,6 +1,7 @@
 const fs = require('fs');
 const express = require('express');
-const logging = require('../logging');
+const logging = require('../util/logging');
+const rendering = require('../util/rendering');
 
 const router = express.Router();
 const logger = new logging.Logger('Shop');
@@ -12,12 +13,8 @@ router.get('/', (request, response, next) =>
             
             const products = JSON.parse(data.toString());
             logger.info(`Loaded ${products.length} product(s)`);
-    
-            response.render('shop', {
-                docTitle: 'Shop',
-                products: products,
-                activeShop: true
-            });
+            
+            rendering.render(response, 'shop', 'Shop', { products: products });
 
             return logger.debug('Request Ended');
         }

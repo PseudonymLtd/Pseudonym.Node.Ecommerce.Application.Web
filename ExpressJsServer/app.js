@@ -6,7 +6,7 @@ const app = express();
 const adminRoutes = require('./routes/admin');
 const errorRoutes = require('./routes/error');
 const shopRoutes = require('./routes/shop');
-const logging = require('./logging');
+const logging = require('./util/logging');
 
 const logger = new logging.Logger('Application');
 
@@ -18,16 +18,23 @@ const registerMiddleware = (section, middlewareFunc) => {
 };
 
 app.set('view engine', 'ejs');
+app.set('resource-extensions', ['.css'])
+
+registerMiddleware('', (request, response, next) =>
+{
+    const isResource = app.get('resource-extensions').includes(path.extname(request.url).toLowerCase());
+    if (isResource) {
+        logger.debug(`Public resource requested: ${request.url}`);
+    }
+    else {
+        logger.debug(`Request Started - requested uri: ${request.url}`);
+    }
+    next();
+});
 
 app.get('/', (request, response, next) =>
 {
     return response.redirect('/shop');
-});
-
-registerMiddleware('', (request, response, next) =>
-{
-    logger.debug('Request Started');
-    next();
 });
 
 registerMiddleware('', express.static(path.join(__dirname, 'public')));
