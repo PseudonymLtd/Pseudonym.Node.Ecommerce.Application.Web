@@ -19,13 +19,13 @@ button {
 
 button:hover,
 button:active {
-    background-color: sandybrown;
+    background-color: coral;
     color: white;
 }
 
 h1 {
     margin: 5px;
-    color: sandybrown;
+    color: coral;
     font: Elephant !important;
 }
 
@@ -101,13 +101,25 @@ h1 {
 }
 
 .form-control label,
-.form-control input {
+.form-control input,
+.form-control textarea {
     display: block;
 }
 
-.form-control input {
-    border: 1px solid sandybrown;
+.form-control input,
+.form-control textarea {
+    border: 1px solid coral;
     font: inherit;
     border-radius: 2px;
     width: 100%;
+}
+
+.form-control textarea {
+    resize: none;
+    padding: 0;
+    height: 100px;
+}
+
+.form-control .invalid {
+    border: 3px dashed red;
 }

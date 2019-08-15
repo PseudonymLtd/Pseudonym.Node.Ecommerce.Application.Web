@@ -4,15 +4,15 @@
     <h1>Add Product</h1>
     <div class="form-control">
         <label for="nameInput">Name: </label>
-        <input id="nameInput" type="text" name="name" />
+        <input class="<%= invalidForm == 'emptyName' ? 'invalid' : '' %>" id="nameInput" type="text" name="name" />
     </div>
     <div class="form-control">
         <label for="descInput">Description: </label>
-        <input id="descInput" type="text" name="description" />
+        <textarea class="<%= invalidForm == 'emptyDesc' ? 'invalid' : '' %>" id="descInput" name="description"></textarea>
     </div>
     <div class="form-control">
         <label for="priceInput">Price: </label>
-        <input id="priceInput" type="price" name="price" value="1" />
+        <input id="priceInput" type="number" name="price" value="1.00" />
     </div>
     <div class="form-control">
         <button type="submit">Add</button>

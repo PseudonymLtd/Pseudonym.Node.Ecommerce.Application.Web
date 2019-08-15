@@ -1,1 +1,26 @@
-[{"id":1,"name":"Protractor","description":"A blue protractor designed to measure angles","price":"1.90"},{"id":2,"name":"Scaletrix Kit","description":"A racing set that WILL break.","price":"29.49"},{"id":3,"name":"Prototype Secret Weapon X","description":"CLASSIFIED","price":"1000.00"},{"id":4,"name":"Product 4","description":"The Fourth Wall","price":"0.78"},{"id":5,"name":"Catapult","description":"For Roman use","price":"150.00"},{"id":6,"name":"Umbrella","description":"for the wet","price":"10000"},{"name":"YAKE","description":"sdasd","price":"34345","id":7}]
+[
+    {
+        "name": "Prototype Secret Weapon X",
+        "description": "CLASSIFIED",
+        "price": 1.9,
+        "id": 4
+    },
+    {
+        "name": "Ya",
+        "description": "dsfds",
+        "price": 23,
+        "id": 8
+    },
+    {
+        "name": "ADSSAD",
+        "description": "SDS",
+        "price": 11,
+        "id": 9
+    },
+    {
+        "name": "zxz\\xz",
+        "description": "423345",
+        "price": 1,
+        "id": 10
+    }
+]

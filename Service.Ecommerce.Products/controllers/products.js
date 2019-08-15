@@ -39,9 +39,9 @@ module.exports.deleteProduct = (request, response, next) => {
         const record = data.find((r) => r.id == id );
         if (record !== undefined) {
 
-            const newData = data.splice(data.indexOf(record), 1);
+            data.splice(data.indexOf(record), 1);
 
-            dataStore.write(newData, (_) => {
+            dataStore.write(data, (_) => {
                 logger.info(`removed product:`);
                 console.info(record);
         

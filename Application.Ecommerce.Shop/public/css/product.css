@@ -13,6 +13,8 @@
     float: left;
     background-color:coral;
     color: #FFFFFF;
+    border: 1px coral;
+    border-radius: 4px;
 }
 
 .product .description {
@@ -23,6 +25,21 @@
     background-color: #FFFFFF;
     color: sandybrown;
     padding: 4px;
+}
+
+.product .price {
+    float: right;
+}
+
+
+.product .link a {
+    color: white;
+    text-decoration: none;
+}
+
+.product .link a:hover,
+.product .link a:active {
+    text-decoration: underline;
 }
 
 .product:hover,

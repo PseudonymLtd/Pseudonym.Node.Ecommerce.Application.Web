@@ -12,9 +12,14 @@
                     <div class="description">
                         <span><i><%= product.description %></i></span>
                     </div>
-                    <div>
-                        <span><b>£<%= product.price %></b></span>
+                    <div class="price">
+                        <span><b>£<%= product.price.toFixed(2) %></b></span>
                     </div>
+                    <footer>
+                        <div class="link">
+                            <a href="/admin/remove-product/<%= product.id %>">Delete</a>
+                        </div>
+                    </footer>
                 </article>
             <% } %>
         </div>
