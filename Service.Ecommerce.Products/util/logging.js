@@ -16,8 +16,9 @@ class Logger
          console.error(`${Date.now()} [ERROR] ${this.Name}: ${message}`);
     }
 
-    fatal(message) {
-        console.exception(`${Date.now()} [FATAL] ${this.Name}: ${message}`);
+    fatal(exception) {
+        console.error(`${Date.now()} [FATAL] ${this.Name}:`);
+        console.error(exception);
     }
 
     info(message) {

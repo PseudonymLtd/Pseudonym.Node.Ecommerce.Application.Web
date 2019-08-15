@@ -1,14 +1,11 @@
-const fs = require('fs');
 const logging = require('../util/logging');
 const serviceResponse = require('../models/serviceResponse');
+const dataStore = require('../data/dataStore');
 
 const logger = new logging.Logger('ProductsController');
 
 module.exports.getProducts = (request, response, next) => {
-    fs.readFile('data/products.json', (err, data) => {
-        if (err) { return logger.fatal(err); }
-
-        var data = JSON.parse(data.toString());
+    dataStore.read((data) => {
 
         response.send(serviceResponse.Ok(data));
 
@@ -17,20 +14,24 @@ module.exports.getProducts = (request, response, next) => {
 };
 
 module.exports.putProduct = (request, response, next) => {
-    fs.readFile('data/products.json', (err, data) => {
-        if (err) { return logger.fatal(err); }
+    dataStore.read((data) =>
+    {
+        const newId = data.length > 0 
+                        ? data.sort((a, b) => a.id > b.id)[data.length - 1].id + 1 
+                        : 1;
 
-        const products = JSON.parse(data.toString());
-        products.push(request.body);
+        let newItem = request.body;
+        newItem.id = newId;
 
-        return fs.writeFile('data/products.json', JSON.stringify(products), (err) => {
-            if (err) { return logger.fatal(err); }
+        data.push(newItem);
+
+        dataStore.write(data, (data) => {
             logger.info(`Added new product:`);
-            console.info(request.body);
-            
+            console.info(newItem);
+    
             return response.send(serviceResponse.Ok(undefined, {
-                itemName: request.body.name,
-                status: 'added'
+                itemName: newItem.name,
+                identifier: newItem.id
             }));
         });
     });
