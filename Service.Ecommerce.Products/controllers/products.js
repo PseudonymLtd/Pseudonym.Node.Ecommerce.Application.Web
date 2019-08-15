@@ -13,6 +13,49 @@ module.exports.getProducts = (request, response, next) => {
     });
 };
 
+module.exports.getProduct = (request, response, next) => {
+    dataStore.read((data) => {
+
+        var id = parseInt(request.params.id);
+        const record = data.find((r) => r.id === id );
+
+        if (record !== undefined) {
+            response.send(serviceResponse.Ok(record));
+        }
+        else {
+            response.send(serviceResponse.InternalServerError({
+                error: `No record found with Id ${id}.`
+            }));
+        }
+
+        return logger.debug('Data Returned');
+    });
+};
+
+module.exports.deleteProduct = (request, response, next) => {
+    dataStore.read((data) =>
+    {
+        var id = parseInt(request.params.id);
+        const record = data.find((r) => r.id == id );
+        if (record !== undefined) {
+
+            const newData = data.splice(data.indexOf(record), 1);
+
+            dataStore.write(newData, (_) => {
+                logger.info(`removed product:`);
+                console.info(record);
+        
+                return response.send(serviceResponse.Ok());
+            });
+        }
+        else {
+            response.send(serviceResponse.Partial(undefined, {
+                UnexpectedBehaviour: `Record with Id ${request.params.id} has already been deleted, or never existed.`
+            }));
+        }
+    });
+};
+
 module.exports.putProduct = (request, response, next) => {
     dataStore.read((data) =>
     {
@@ -25,7 +68,7 @@ module.exports.putProduct = (request, response, next) => {
 
         data.push(newItem);
 
-        dataStore.write(data, (data) => {
+        dataStore.write(data, (_) => {
             logger.info(`Added new product:`);
             console.info(newItem);
     

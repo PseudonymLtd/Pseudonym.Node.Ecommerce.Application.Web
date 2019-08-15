@@ -15,6 +15,10 @@ module.exports = class ServiceResponseHelper
     static NotFound(data, additionalInformation) {
         return new ServiceResponse(404, 'Not Found', data, additionalInformation);
     }
+
+    static Gone(data, additionalInformation) {
+        return new ServiceResponse(300, 'Gone', data, additionalInformation);
+    }
 }
 
 class ServiceResponse
