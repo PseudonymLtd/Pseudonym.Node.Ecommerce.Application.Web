@@ -6,25 +6,27 @@
 }
 
 .products .product {
-    border: 1px solid #FF9800;
+    border: 0px;
     width: 300px;
     padding: 10px;
     margin: 10px;
     float: left;
-    background-color: #FFE4C4;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    background-color:coral;
+    color: #FFFFFF;
 }
 
 .product .description {
     overflow-y: scroll;
     max-height: 99px;
     min-height: 99px;
-    border: 1px dashed rgb(255, 152, 0);
+    border: 1px dashed coral;
     background-color: #FFFFFF;
+    color: sandybrown;
+    padding: 4px;
 }
 
 .product:hover,
 .product:active,
 .product.active {
-    box-shadow: 0 2px 8px rgba(255, 152, 0);
+    box-shadow: 0 2px 8px coral;
 }

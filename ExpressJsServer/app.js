@@ -6,7 +6,6 @@ const app = express();
 const adminRoutes = require('./routes/admin');
 const errorRoutes = require('./routes/error');
 const shopRoutes = require('./routes/shop');
-const apiRoutes = require('./routes/api');
 const logging = require('./util/logging');
 
 const logger = new logging.Logger('Application');
@@ -19,7 +18,7 @@ const registerMiddleware = (section, middlewareFunc) => {
 };
 
 app.set('view engine', 'ejs');
-app.set('resource-extensions', ['.css'])
+app.set('resource-extensions', ['.css', '.ico'])
 
 registerMiddleware('', (request, response, next) =>
 {
@@ -47,8 +46,6 @@ registerMiddleware('', bodyParser.json());
 registerMiddleware('/admin', adminRoutes);
 
 registerMiddleware('/shop', shopRoutes);
-
-registerMiddleware('/api', apiRoutes);
 
 registerMiddleware('', errorRoutes);
 

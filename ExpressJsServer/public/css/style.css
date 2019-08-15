@@ -65,6 +65,31 @@ h1 {
     font-weight: bold;
 }
 
+.main-footer {
+    width: 100%;
+    height: 56px;
+    background-color: coral;
+    padding: 0 1.5rem;
+    position: fixed;
+    bottom: 0;
+}
+
+.main-footer a {
+    text-decoration: none;
+    color: white;
+}
+.main-footer a:hover,
+.main-footer a:active {
+    text-decoration: underline;
+}
+
+.main-footer__content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
 .product-form {
     width: 300px;
     max-width:  90%;

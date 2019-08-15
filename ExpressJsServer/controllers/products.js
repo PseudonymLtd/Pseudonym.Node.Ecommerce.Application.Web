@@ -1,7 +1,7 @@
-const fs = require('fs');
 const http = require('request');
 const logging = require('../util/logging');
 const rendering = require('../util/rendering');
+const serviceDirectory = require('../util/serviceDirectory');
 
 const logger = new logging.Logger('ProductsController');
 
@@ -13,31 +13,17 @@ module.exports.getAddProduct = (request, response, next) => {
 };
 
 module.exports.postAddProduct = (request, response, next) => {
-    fs.readFile('data/products.json', (err, data) => {
-        if (err === null) {
-
-            const products = JSON.parse(data.toString());
-            products.push(request.body);
-
-            return fs.writeFile('data/products.json', JSON.stringify(products), (err) => {
-                if (err === null) {
-                    logger.info(`Added new object:`);
-                    console.info(request.body);
-                    return response.redirect('/');
-                }
-                throw err;
-            });
-        }
-        throw err;
-    });
-};
-
-module.exports.getProducts = (request, response, next) => {
-    fs.readFile('data/products.json', (err, data) => {
+    http(`${serviceDirectory.ProductsServiceUrl}/api/product`, { json: true, body: request.body, method: "PUT" }, (err, res, body) => {
         if (err) { return logger.fatal(err); }
 
-        response.send(JSON.parse(data.toString()));
+        if (body.code !== 200) {
+            logger.error(`External Error: ${body.message}`);
+            return response.redirect(`/add-product?success=false&error=${body.message}`)
+        }
 
-        return logger.debug('Data Returned');
+        logger.debug('add product result:');
+        console.debug(body);
+
+        return response.redirect('/');
     });
 };
