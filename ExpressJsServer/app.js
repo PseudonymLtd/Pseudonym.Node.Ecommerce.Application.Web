@@ -6,6 +6,7 @@ const app = express();
 const adminRoutes = require('./routes/admin');
 const errorRoutes = require('./routes/error');
 const shopRoutes = require('./routes/shop');
+const apiRoutes = require('./routes/api');
 const logging = require('./util/logging');
 
 const logger = new logging.Logger('Application');
@@ -41,9 +42,13 @@ registerMiddleware('', express.static(path.join(__dirname, 'public')));
 
 registerMiddleware('', bodyParser.urlencoded({extended: false}));
 
+registerMiddleware('', bodyParser.json());
+
 registerMiddleware('/admin', adminRoutes);
 
 registerMiddleware('/shop', shopRoutes);
+
+registerMiddleware('/api', apiRoutes);
 
 registerMiddleware('', errorRoutes);
 
