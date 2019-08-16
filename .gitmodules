@@ -1,0 +1,3 @@
+[submodule "Service.Ecommerce.Products"]
+	path = Service.Ecommerce.Products
+	url = https://github.com/PseudonymLtd/Service.Ecommerce.Products.git
