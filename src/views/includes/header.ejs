@@ -5,18 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/product.css">
+    <link rel="stylesheet" href="<%= localServerUrl %>/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="<%= localServerUrl %>/css/style.css" />
+    <script src="<%= localServerUrl %>/js/bootstrap.min.js"></script>
+    <script src="<%= localServerUrl %>/js/jquery.slim.min.js"></script>
+    <script src="<%= localServerUrl %>/js/popper.min.js"></script>
     <title><%= docTitle %></title>
 </head>
 
 <body>
-    <header class="main-header">
-        <nav class="main-header__nav">
-            <ul class="main-header__item-list">
-                <li class="main-header__item"><a class="<%= docTitle === 'Shop' ? 'active' : '' %>" href="/shop">Shop</a></li>
-                <li class="main-header__item"><a class="<%= docTitle === 'Add Product' ? 'active' : '' %>" href="/admin/add-product">Add Product</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/shop">Shop</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/shop">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/add-product">Add Product</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/admin/add-product">Add Product</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Logout</a>
+                    </div>
+                </li>
             </ul>
-        </nav>
-    </header>
-    <main>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <main style="padding: 40px;">

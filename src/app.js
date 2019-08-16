@@ -1,3 +1,5 @@
+//require('bootstrap');
+
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,22 +12,15 @@ const logging = require('./util/logging');
 
 const logger = new logging.Logger('Application');
 
-const registerMiddleware = (section, middlewareFunc) => {
-    if (section !== '') {
-        logger.info(`Registering Middleware: ${section} Pages Processor`);
-    }
-    app.use(section, middlewareFunc);
-};
-
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
-app.set('resource-extensions', ['.css', '.ico'])
+app.set('resource-extensions', ['.css', '.ico', '.js'])
 
-registerMiddleware('', (request, response, next) =>
+app.use((request, response, next) =>
 {
     const isResource = app.get('resource-extensions').includes(path.extname(request.url).toLowerCase());
     if (isResource) {
-        logger.debug(`Public resource requested: ${request.url}`);
+        logger.debug(`Resource request: ${request.url}`);
     }
     else {
         logger.debug(`Request Started - requested uri: ${request.url}`);
@@ -38,16 +33,14 @@ app.get('/', (request, response, next) =>
     return response.redirect('/shop');
 });
 
-registerMiddleware('', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
+app.use('/js', express.static(path.join(__dirname, '../node_modules/jquery/dist')));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
-registerMiddleware('', bodyParser.urlencoded({extended: false}));
-
-registerMiddleware('', bodyParser.json());
-
-registerMiddleware('/admin', adminRoutes);
-
-registerMiddleware('/shop', shopRoutes);
-
-registerMiddleware('', errorRoutes);
+app.use('/admin', adminRoutes);
+app.use('/shop', shopRoutes);
+app.use(errorRoutes);
 
 app.listen(3000);

@@ -9,7 +9,7 @@ module.exports.getAddProduct = (request, response, next) => {
 
     const isInvalid = request.query.hasOwnProperty('invalidForm');
 
-    rendering.render(response, 'add-product', 'Add Product', {
+    rendering.render(request, response, 'add-product', 'Add Product', {
         invalidForm: isInvalid ? request.query.invalidForm : undefined
     });
 

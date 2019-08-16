@@ -1,22 +1,31 @@
 <%- include('includes/header.ejs') %>
 
-<form class="product-form" action="/admin/add-product" method="POST">
-    <h1>Add Product</h1>
-    <div class="form-control">
-        <label for="nameInput">Name: </label>
-        <input class="<%= invalidForm == 'emptyName' ? 'invalid' : '' %>" id="nameInput" type="text" name="name" />
+<h1>Add Product</h1>
+
+<form class="needs-validation" action="/admin/add-product" method="POST">
+    <div class="form-group">
+        <label for="nameInput">Name</label>
+        <input class="form-control" id="nameInput" type="text" name="name" aria-describedby="nameHelp" placeholder="Product Name" required />
+        <small id="nameHelp" class="form-text text-muted">Product names do not have to be unique.</small>
+        <div class="invalid-feedback">
+                Please provide a product name.
+        </div>
     </div>
-    <div class="form-control">
-        <label for="descInput">Description: </label>
-        <textarea class="<%= invalidForm == 'emptyDesc' ? 'invalid' : '' %>" id="descInput" name="description"></textarea>
+    <div class="form-group">
+        <label for="descInput">Description</label>
+        <textarea class="form-control" id="descInput" name="description" placeholder="Product Description" required></textarea>
+        <div class="invalid-feedback">
+            Please provide a product description.
+        </div>
     </div>
-    <div class="form-control">
-        <label for="priceInput">Price: </label>
-        <input id="priceInput" type="number" name="price" value="1.00" />
+    <div class="form-group">.
+        <label for="priceInput">Price</label>
+        <input class="form-control" id="priceInput" type="number" name="price" value="1.00" step="0.01" required/>
+        <div class="invalid-feedback">
+            Please provide a price for this product
+        </div>
     </div>
-    <div class="form-control">
-        <button type="submit">Add</button>
-    </div>
+    <button type="submit" class="btn btn-warning">Add</button>
 </form>
         
 <%- include('includes/footer.ejs') %>

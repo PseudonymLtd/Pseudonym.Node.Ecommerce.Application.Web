@@ -1,0 +1,18 @@
+<%- include('includes/header.ejs') %>
+
+<div class="bs-callout bs-callout-warning">
+    <h1><%= product.name %></h1>
+    <div>
+        <span><i><%= product.description %></i></span>
+    </div>
+    <div>
+        <span><b>£<%= product.price.toFixed(2) %></b></span>
+    </div>
+    <footer>
+        <div>
+            <a href="/admin/remove-product/<%= product.id %>">Delete</a>
+        </div>
+    </footer>
+</div>
+        
+<%- include('includes/footer.ejs') %>
