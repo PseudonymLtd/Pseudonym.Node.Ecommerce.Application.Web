@@ -1,2 +1,2 @@
-# nodejs-sandbox
-Node.js sandbox for development testing purposes.
+# Application.Ecommerce.Shop
+A frontend application containign a very simple shop that communicates with a micro-service architecture.
