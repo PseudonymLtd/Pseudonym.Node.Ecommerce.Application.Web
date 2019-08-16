@@ -18,6 +18,7 @@ const registerMiddleware = (section, middlewareFunc) => {
 };
 
 app.set('view engine', 'ejs');
+app.set('views', 'src/views');
 app.set('resource-extensions', ['.css', '.ico'])
 
 registerMiddleware('', (request, response, next) =>

@@ -2,14 +2,14 @@
   "name": "application.ecommerce.shop",
   "version": "1.0.0",
   "description": "Application Ecommerce Shop UI",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PseudonymLtd/nodejs-sandbox.git"
+    "url": "git+https://github.com/PseudonymLtd/Application.Ecommerce.Shop.git"
   },
   "keywords": [
     "frontEnd",
@@ -18,9 +18,9 @@
   "author": "Tom Day",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PseudonymLtd/nodejs-sandbox/issues"
+    "url": "https://github.com/PseudonymLtd/Application.Ecommerce.Shop/issues"
   },
-  "homepage": "https://github.com/PseudonymLtd/nodejs-sandbox#readme",
+  "homepage": "https://github.com/PseudonymLtd/Application.Ecommerce.Shop#readme",
   "devDependencies": {
     "nodemon": "^1.19.1"
   },
