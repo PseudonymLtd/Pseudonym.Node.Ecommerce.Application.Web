@@ -21,7 +21,7 @@ module.exports.postAddProduct = (request, response, next) => {
 
         if (body.code !== 200) {
             logger.error(`External Error: ${body.message}`);
-            return response.redirect(`/add-product?success=false&error=${body.message}`)
+            return response.redirect(`/admin/add-product?success=false&error=${body.message}`)
         }
 
         logger.debug('add product result:');
@@ -59,7 +59,7 @@ module.exports.postUpdateProduct = (request, response, next) => {
 
         if (body.code !== 200) {
             logger.error(`External Error: ${body.message}`);
-            return response.redirect(`/update-product?success=false&error=${body.message}`)
+            return response.redirect(`/admin/update-product?success=false&error=${body.message}`)
         }
 
         logger.debug('update product result:');
@@ -75,7 +75,7 @@ module.exports.getRemoveProduct = (request, response, next) => {
 
         if (body.code !== 200 && body.code !== 202) {
             logger.error(`External Error: ${body.message}`);
-            return response.redirect(`/remove-product?success=false&error=${body.message}`)
+            return response.redirect(`/admin/remove-product?success=false&error=${body.message}`)
         }
 
         logger.debug('remove product result:');
