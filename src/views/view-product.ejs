@@ -9,7 +9,8 @@
         <span><b>£<%= product.price.toFixed(2) %></b></span>
     </div>
     <footer>
-        <div>
+        <div>            
+            <a href="/admin/update-product/<%= product.id %>">Edit</a> |
             <a href="/admin/remove-product/<%= product.id %>">Delete</a>
         </div>
     </footer>

@@ -9,9 +9,9 @@
 </div>
 <div>
     <% if (products.length > 0) { %>
-        <div class="d-flex justify-content-around" style="padding: 0 0 100px 0;">
+        <div class="d-flex" style="padding: 0 0 100px 0; margin-left: -10px; flex-wrap: wrap;">
             <% for (let product of products) { %>
-                <div class="card" style="max-width: 224px; width: 224px;">
+                <div class="card" style="max-width: 224px; min-width: 224px; margin: 10px">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title"><%= product.name %></h5>

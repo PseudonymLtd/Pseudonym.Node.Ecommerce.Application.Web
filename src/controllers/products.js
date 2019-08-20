@@ -7,11 +7,7 @@ const logger = new logging.Logger('ProductsController');
 
 module.exports.getAddProduct = (request, response, next) => {
 
-    const isInvalid = request.query.hasOwnProperty('invalidForm');
-
-    rendering.render(request, response, 'add-product', 'Add Product', {
-        invalidForm: isInvalid ? request.query.invalidForm : undefined
-    });
+    rendering.render(request, response, 'add-product', 'Add Product');
 
     return logger.debug('Page Served');
 };
@@ -19,13 +15,6 @@ module.exports.getAddProduct = (request, response, next) => {
 module.exports.postAddProduct = (request, response, next) => {
 
     request.body.price = parseFloat(request.body.price);
-
-    if (request.body.name.length === 0) {
-        return response.redirect('/admin/add-product?invalidForm=emptyName');
-    }
-    else if (request.body.description.length === 0) {
-        return response.redirect('/admin/add-product?invalidForm=emptyDesc');
-    }
 
     http(`${serviceDirectory.ProductsServiceUrl}/api/product`, { json: true, body: request.body, method: "PUT" }, (err, res, body) => {
         if (err) { return logger.fatal(err); }
@@ -39,6 +28,44 @@ module.exports.postAddProduct = (request, response, next) => {
         console.debug(body);
 
         return response.redirect('/');
+    });
+};
+
+module.exports.getUpdateProduct = (request, response, next) => {
+
+    return http(`${serviceDirectory.ProductsServiceUrl}/api/product/${request.params.id}`, { json: true }, (err, res, body) => {
+        if (err) { return logger.fatal(err); }
+    
+        if (body.code !== 200) {
+          logger.error(`External Error: ${body.message}`);
+          return response.redirect(`/shop?success=false&error=${body.message}`);
+        }
+    
+        rendering.render(request, response, 'update-product', 'Edit Product', {
+            product: body.data
+        });
+    
+        return logger.debug('Page Served');
+      });
+};
+
+
+module.exports.postUpdateProduct = (request, response, next) => {
+
+    request.body.price = parseFloat(request.body.price);
+
+    http(`${serviceDirectory.ProductsServiceUrl}/api/product/${request.body.id}`, { json: true, body: request.body, method: "PUT" }, (err, res, body) => {
+        if (err) { return logger.fatal(err); }
+
+        if (body.code !== 200) {
+            logger.error(`External Error: ${body.message}`);
+            return response.redirect(`/update-product?success=false&error=${body.message}`)
+        }
+
+        logger.debug('update product result:');
+        console.debug(body);
+
+        return response.redirect(`/shop/product/${request.body.id}`);
     });
 };
 

@@ -1,4 +1,4 @@
 {
-    "verbose": true,
-    "ignore": []
+    "verbose": false,
+    "ignore": ["Service.Ecommerce.Products/*"]
 }
