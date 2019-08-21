@@ -107,7 +107,15 @@ module.exports.getRemoveCartItem = (request, response, next) => {
 };
 
 module.exports.getCheckoutPage = (request, response, next) => {
-  rendering.render(request, response, 'shop/checkout', `Checkout`);
+
+  const cart = request.app.get('cart');
+  if (cart.IsEmpty) {
+    response.redirect('/');
+  }
+  else 
+  {
+    rendering.render(request, response, 'shop/checkout', 'Checkout');
+  }
 
   return logger.debug('Page Served');
 };
