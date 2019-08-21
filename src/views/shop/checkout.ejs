@@ -9,10 +9,10 @@
             <div class="container-fluid" style="padding: 0">
                 <div class="row align-items-center justify-content-between">
                     <div class="col align-self-center">
-                        <span><%= item.Quantity %> x <a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a> @ £<%= item.Product.Price.toFixed(2) %></span>
+                        <span><%= item.Quantity %> x <a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a> @ £<%= parseMoney(item.Product.Price) %></span>
                     </div>
                     <div class="col align-self-center" style="text-align: right;">
-                        <span>£<%= item.Total.toFixed(2) %></span>
+                        <span>£<%= parseMoney(item.Total) %></span>
                     </div>
                 </div>
             </div>
@@ -21,14 +21,14 @@
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center" style="text-align: right;">
-                    <span><b>£<%= cart.TotalPrice.toFixed(2) %></b></span>
+                    <span><b>£<%= parseMoney(cart.TotalPrice) %></b></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <footer class="bs-callout bs-callout-warning cartPrice">
-    <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
+    <p style="float: left;"><b>£<%= parseMoney(cart.TotalPrice) %></b></p>
     <div style="float: right;">
         <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
         <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>

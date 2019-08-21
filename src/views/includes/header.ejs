@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="<%= localServerUrl %>/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<%= localServerUrl %>/css/style.css" />
-    <script src="<%= localServerUrl %>/js/bootstrap.min.js"></script>
     <script src="<%= localServerUrl %>/js/jquery.slim.min.js"></script>
     <script src="<%= localServerUrl %>/js/popper.min.js"></script>
+    <script src="<%= localServerUrl %>/js/bootstrap.min.js"></script>
     <title><%= docTitle %></title>
 </head>
 
@@ -28,20 +28,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/shop/products">Products</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/add-product">Add Product</a>
-                </li>
-                <!--<li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/admin/manage-products">Manage Products</a>
                         <a class="dropdown-item" href="/admin/add-product">Add Product</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Logout</a>
                     </div>
-                </li>-->
+                </li>
             </ul>
             <li class="nav-item navbar-nav" style="display: inline-flex">
-                <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= cart.TotalPrice.toFixed(2) %>)</a> 
+                <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= parseMoney(cart.TotalPrice) %>)</a> 
             </li>
             <form action="/shop/products" method="GET" class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" name="Search" placeholder="Search" aria-label="Search">

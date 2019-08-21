@@ -13,6 +13,24 @@ module.exports.getAddProduct = (request, response, next) => {
     return logger.debug('Page Served');
 };
 
+module.exports.getManageProducts = (request, response, next) => {
+    return http(`${serviceDirectory.ProductsServiceUrl}/api/products`, { json: true }, (err, res, body) => {
+        if (err) { return logger.fatal(err); }
+    
+        if (body.code !== 200) {
+          logger.error(`External Error: ${body.message}`);
+          return response.redirect(`/shop/products?success=false&error=${body.message}`)
+        }
+    
+        let products = body.data.map(b => Product.Parse(b))
+        logger.info(`Loaded ${products.length} product(s)`);
+
+        rendering.render(request, response, 'admin/manage-products', 'Manage Products', { products: products } );
+
+        return logger.debug('Page Served');
+      });
+};
+
 module.exports.postAddProduct = (request, response, next) => {
 
     var newProduct = Product.Parse(request.body);
@@ -42,7 +60,8 @@ module.exports.getUpdateProduct = (request, response, next) => {
         }
 
         rendering.render(request, response, 'admin/update-product', 'Edit Product', {
-            product: body.data
+            product: body.data,
+            sender: request.query.sender ? request.query.sender : 'Management'
         });
 
         return logger.debug('Page Served');
@@ -67,10 +86,17 @@ module.exports.postUpdateProduct = (request, response, next) => {
 
         //Check for item in cart
         const cart = request.app.get('cart');
-        const existingItem = cart.FindItem(updatedProduct.Id);
-        existingItem.Product.Price = updatedProduct.Price;
+        const existingItem = cart.FindItem(body.data.id);
+        if (existingItem) {
+            existingItem.Product.Price = body.data.price;
+        }
 
-        return response.redirect(`/shop/product/${updatedProduct.Id}`);
+        if (request.query.sender && request.query.sender === 'ProductDetails') {
+            return response.redirect(`/shop/product/${body.data.id}`);
+        }
+        else {
+            return response.redirect('/admin/manage-products');
+        }
     });
 };
 
@@ -90,6 +116,6 @@ module.exports.getRemoveProduct = (request, response, next) => {
         const cart = request.app.get('cart');
         cart.RemoveItem(request.params.id)
 
-        return response.redirect('/shop/products');
+        return response.redirect('/admin/manage-products');
     });
 };

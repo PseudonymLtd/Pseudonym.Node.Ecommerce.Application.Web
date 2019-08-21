@@ -1,6 +1,6 @@
 <%- include('../includes/header.ejs') %>
 
-<form class="needs-validation" action="/admin/update-product/<%= product.id %>" method="POST">
+<form class="needs-validation" action="/admin/update-product/<%= product.id %>?sender=<%= sender %>" method="POST">
     <div class="form-group">
         <label for="nameInput">Name</label>
         <input class="form-control" id="nameInput" type="text" name="name" aria-describedby="nameHelp" placeholder="Product Name" value="<%= product.name %>" required />

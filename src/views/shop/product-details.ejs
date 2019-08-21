@@ -12,7 +12,7 @@
         <span><i><%= product.description %></i></span>
     </div>
     <div>
-        <span><b>£<%= product.price.toFixed(2) %></b></span>
+        <span><b>£<%= parseMoney(product.price) %></b></span>
     </div>
     <form class="needs-validation" action="/shop/cart" method="POST">
         <div class="form-group" style="display: inline-flex;">
@@ -26,7 +26,7 @@
     </form>
     <footer>
         <div>            
-            <a href="/admin/update-product/<%= product.id %>">Edit</a> |
+            <a href="/admin/update-product/<%= product.id %>?sender=ProductDetails">Edit</a> |
             <a href="/admin/remove-product/<%= product.id %>">Delete</a>
         </div>
     </footer>
