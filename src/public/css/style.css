@@ -89,11 +89,10 @@ a:active {
 }
 
 .cartPrice {
-    float: right;
-    padding: 10px;
-    margin: 0;
     border-top-color: #f0ad4e;
     border-bottom-color: #f0ad4e;
     border-right-color: #f0ad4e;
     background-color: white;
+    font-size: xx-large;
+    height: 98px;
 }

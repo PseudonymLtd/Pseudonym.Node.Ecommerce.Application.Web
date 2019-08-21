@@ -1,6 +1,6 @@
 <%- include('../includes/header.ejs') %>
 
-<div class="jumbotron">
+<div class="jumbotron" style="padding-bottom: 32px; margin-bottom: 64px;">
     <h1 class="display-4">Cart</h1>
     <p class="lead">The items below are in your cart; manage them below or head to the checkout.</p>
     <hr class="my-4">
@@ -18,7 +18,7 @@
         <% } else { %>
             <% for (let item of cart.Items) { %>
                 <div class="bs-callout bs-callout-warning">
-                    <h1><%= item.Product.Name %></h1>
+                    <h1><a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a></h1>
                     <div>
                         <span><i><%= item.Product.Description %></i></span>
                     </div>
@@ -49,13 +49,13 @@
         <% } %>
     </div>
     <% if (!cart.IsEmpty) { %>
-        <div class="bs-callout bs-callout-warning cartPrice">
-            <p>Current running total: <b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
-        </div> 
-        <div>     
-            <a class="btn btn-warning btn-lg" href="/shop/checkout" role="button">Checkout</a>
-            <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
-        </div>
+        <footer class="bs-callout bs-callout-warning cartPrice">
+            <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
+            <div style="float: right;">
+                <a class="btn btn-warning btn-lg" href="/shop/checkout" role="button">Checkout</a>
+                <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
+            </div>
+        </footer> 
     <% } %>
 </div>
 
