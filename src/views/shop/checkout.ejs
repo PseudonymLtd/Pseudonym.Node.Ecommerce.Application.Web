@@ -1,41 +1,38 @@
 <%- include('../includes/header.ejs') %>
 
-<div class="jumbotron" style="padding-bottom: 32px; margin-bottom: 64px;">
-    <h1 class="display-4">Checkout</h1>
-    <p class="lead">Please review the below order and pay.</p>
-    <hr class="my-4">
-    <div class="cart">
-        <div class="bs-callout bs-callout-warning">
-            <h1>Order</h1>
-            <% for (let item of cart.Items) { %>
-                <div class="container-fluid" style="padding: 0">
-                    <div class="row align-items-center justify-content-between">
-                        <div class="col align-self-center">
-                            <span><%= item.Quantity %> x <a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a> @ £<%= item.Product.Price.toFixed(2) %></span>
-                        </div>
-                        <div class="col align-self-center" style="text-align: right;">
-                            <span>£<%= item.Total.toFixed(2) %></span>
-                        </div>
-                    </div>
-                </div>
-            <% } %>
-            <hr class="my-2">
+<p class="lead">Please review the below order and pay.</p>
+<hr class="my-4">
+<div class="cart">
+    <div class="bs-callout bs-callout-warning">
+        <h1>Order</h1>
+        <% for (let item of cart.Items) { %>
             <div class="container-fluid" style="padding: 0">
                 <div class="row align-items-center justify-content-between">
-                    <div class="col align-self-center" style="text-align: right;">
-                        <span><b>£<%= cart.TotalPrice.toFixed(2) %></b></span>
+                    <div class="col align-self-center">
+                        <span><%= item.Quantity %> x <a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a> @ £<%= item.Product.Price.toFixed(2) %></span>
                     </div>
+                    <div class="col align-self-center" style="text-align: right;">
+                        <span>£<%= item.Total.toFixed(2) %></span>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+        <hr class="my-2">
+        <div class="container-fluid" style="padding: 0">
+            <div class="row align-items-center justify-content-between">
+                <div class="col align-self-center" style="text-align: right;">
+                    <span><b>£<%= cart.TotalPrice.toFixed(2) %></b></span>
                 </div>
             </div>
         </div>
     </div>
-    <footer class="bs-callout bs-callout-warning cartPrice">
-        <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
-        <div style="float: right;">
-            <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
-            <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>
-        </div>
-    </footer> 
 </div>
+<footer class="bs-callout bs-callout-warning cartPrice">
+    <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
+    <div style="float: right;">
+        <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
+        <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>
+    </div>
+</footer> 
 
 <%- include('../includes/footer.ejs') %>

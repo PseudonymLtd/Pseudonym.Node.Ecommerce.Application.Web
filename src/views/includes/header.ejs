@@ -43,10 +43,12 @@
             <li class="nav-item navbar-nav" style="display: inline-flex">
                 <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= cart.TotalPrice.toFixed(2) %>)</a> 
             </li>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form action="/shop/products" method="GET" class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" name="Search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
     </nav>
     <main style="padding: 40px;">
+    <div class="jumbotron" style="padding-bottom: 32px; margin-bottom: 64px;">
+    <h1 class="display-4"><%= docTitle %></h1>

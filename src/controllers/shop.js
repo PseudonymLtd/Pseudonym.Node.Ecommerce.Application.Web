@@ -22,9 +22,28 @@ module.exports.getProductsListPage = (request, response, next) => {
       return response.redirect(`/shop/products?success=false&error=${body.message}`)
     }
 
-    logger.info(`Loaded ${body.data.length} product(s)`);
+    let products = body.data.map(b => Product.Parse(b))
+    logger.info(`Loaded ${products.length} product(s)`);
 
-    rendering.render(request, response, 'shop/product-list', 'Shop', { products: body.data.map(b => Product.Parse(b)) });
+    if (request.query.Search && request.query.Search.trim() != '') {
+      products = products.filter(p => {
+          const words = (p.Name.trim() + ' ' + p.Description.trim()).toLowerCase().split(' ');
+          const searchTerms = request.query.Search.trim().toLowerCase().split(' ');
+
+          for (let term of searchTerms) {
+            if (words.includes(term)) { return true; }
+          }
+
+          return false;
+      })
+    }
+
+    if (products.length === 1) {
+      return response.redirect(`/shop/product/${products[0].Id}`);
+    }
+    else {
+      rendering.render(request, response, 'shop/product-list', 'Products', { products: products });
+    }
 
     return logger.debug('Page Served');
   });
@@ -42,7 +61,7 @@ module.exports.getProductDetailsPage = (request, response, next) => {
     const cart = request.app.get('cart');
     const existingCartItem = cart.FindItem(request.params.id);
 
-    rendering.render(request, response, 'shop/product-details', `Shop::${body.data.name}`, {
+    rendering.render(request, response, 'shop/product-details', `Product Details`, {
       quantityInCart: existingCartItem ? existingCartItem.Quantity : 0,
       product: Product.Parse(body.data)
     });
@@ -72,10 +91,7 @@ module.exports.postAddToCart = (request, response, next) => {
     cart.AddItem(product, qty);
   }
 
-  rendering.render(request, response, `shop/product-details`, `Shop::${product.name}`, {
-    quantityInCart: qty,
-    product: product
-  });
+  response.redirect(`/shop/product/${product.Id}`);
 
   return logger.debug('Page Served');
 };

@@ -60,7 +60,8 @@ a:active {
     color: #d9534f;
 }
 .bs-callout-warning {
-    border-left-color: #f0ad4e;
+    border-color: #f0ad4e;
+    background-color: white;
 }
 .bs-callout-warning h4 {
     color: #f0ad4e;
@@ -81,17 +82,7 @@ a:active {
     padding-left: 38px !important;
 }
 
-.cart .bs-callout-warning {
-    border-top-color: #f0ad4e;
-    border-bottom-color: #f0ad4e;
-    border-right-color: #f0ad4e;
-    background-color: white;
-}
-
 .cartPrice {
-    border-top-color: #f0ad4e;
-    border-bottom-color: #f0ad4e;
-    border-right-color: #f0ad4e;
     background-color: white;
     font-size: xx-large;
     height: 98px;

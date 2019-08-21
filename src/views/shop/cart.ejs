@@ -1,62 +1,59 @@
 <%- include('../includes/header.ejs') %>
 
-<div class="jumbotron" style="padding-bottom: 32px; margin-bottom: 64px;">
-    <h1 class="display-4">Cart</h1>
-    <p class="lead">The items below are in your cart; manage them below or head to the checkout.</p>
-    <hr class="my-4">
-    <div class="cart">
-        <% if (cart.IsEmpty) { %>
-            <div class="bs-callout bs-callout-warning">
-                <h1>Empty Cart</h1>
-                <div>
-                    <span><i>You do not have any items in your cart!</i></span>
-                </div>
-                <footer style="padding-top: 6px;">
-                    <a class="btn btn-warning" href="/shop/products" role="button">Browse Products</a>
-                </footer>
+<p class="lead">The items below are in your cart; manage them below or head to the checkout.</p>
+<hr class="my-4">
+<div class="cart">
+    <% if (cart.IsEmpty) { %>
+        <div class="bs-callout bs-callout-warning">
+            <h1>Empty Cart :(</h1>
+            <div>
+                <span>You do not have any items in your cart!</span>
             </div>
-        <% } else { %>
-            <% for (let item of cart.Items) { %>
-                <div class="bs-callout bs-callout-warning">
-                    <h1><a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a></h1>
-                    <div>
-                        <span><i><%= item.Product.Description %></i></span>
-                    </div>
-                    <hr class="my-2">
-                    <div class="container-fluid" style="padding: 0">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col align-self-center">
-                                <div>
-                                    <span><b>Individual Price:</b> £<%= item.Product.Price.toFixed(2) %></span>
-                                </div>
-                                <div>
-                                    <span><b>Subtotal:</b> £<%= item.Total.toFixed(2) %></span>
-                                </div>
+            <footer style="padding-top: 6px;">
+                <a class="btn btn-warning" href="/shop/products" role="button">Browse Products</a>
+            </footer>
+        </div>
+    <% } else { %>
+        <% for (let item of cart.Items) { %>
+            <div class="bs-callout bs-callout-warning">
+                <h1><a href="/shop/product/<%= item.Product.Id %>"><%= item.Product.Name %></a></h1>
+                <div>
+                    <span><i><%= item.Product.Description %></i></span>
+                </div>
+                <hr class="my-2">
+                <div class="container-fluid" style="padding: 0">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col align-self-center">
+                            <div>
+                                <span><b>Individual Price:</b> £<%= item.Product.Price.toFixed(2) %></span>
                             </div>
-                            <div class="col align-self-center" style="text-align: right;">
-                                <form class="needs-validation" action="/shop/cart/product/<%= item.Product.Id %>" method="POST">
-                                    <div class="form-group" style="display: inline-flex;">
-                                        <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="<%= item.Quantity %>" min="1" style="width: 62px; margin-right: 10px;" required/>
-                                        <button type="submit" class="btn btn-warning">Update</button>
-                                        <a style="margin-left: 8px;" class="btn btn-secondary" href="/shop/cart/product/<%= item.Product.Id %>" role="button">Remove</a>
-                                    </div>
-                                </form>
+                            <div>
+                                <span><b>Subtotal:</b> £<%= item.Total.toFixed(2) %></span>
                             </div>
+                        </div>
+                        <div class="col align-self-center" style="text-align: right;">
+                            <form class="needs-validation" action="/shop/cart/product/<%= item.Product.Id %>" method="POST">
+                                <div class="form-group" style="display: inline-flex;">
+                                    <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="<%= item.Quantity %>" min="1" style="width: 62px; margin-right: 10px;" required/>
+                                    <button type="submit" class="btn btn-warning">Update</button>
+                                    <a style="margin-left: 8px;" class="btn btn-secondary" href="/shop/cart/product/<%= item.Product.Id %>" role="button">Remove</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-            <% } %>
-        <% } %>
-    </div>
-    <% if (!cart.IsEmpty) { %>
-        <footer class="bs-callout bs-callout-warning cartPrice">
-            <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
-            <div style="float: right;">
-                <a class="btn btn-warning btn-lg" href="/shop/checkout" role="button">Checkout</a>
-                <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
             </div>
-        </footer> 
+        <% } %>
     <% } %>
 </div>
+<% if (!cart.IsEmpty) { %>
+    <footer class="bs-callout bs-callout-warning cartPrice">
+        <p style="float: left;"><b>£<%= cart.TotalPrice.toFixed(2) %></b></p>
+        <div style="float: right;">
+            <a class="btn btn-warning btn-lg" href="/shop/checkout" role="button">Checkout</a>
+            <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
+        </div>
+    </footer> 
+<% } %>
 
 <%- include('../includes/footer.ejs') %>
