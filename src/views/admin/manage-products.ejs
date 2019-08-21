@@ -9,15 +9,18 @@
             <hr class="my-2">
             <div class="container-fluid" style="padding: 0">
                 <div class="row align-items-center justify-content-between">
-                    <div class="col-auto align-self-center">
+                    <div class="col-lg align-self-center">
+                        <img src="<%= product.ImageUri %>" class="img-fluid" alt="product image" style="width: 75px; height: 75px; margin-right: 8px; float: left;" />
                         <div>
-                            <span><a href="/shop/product/<%= product.Id %>"><%= product.Name %></a> - £<%= parseMoney(product.Price) %></span>
-                        </div>
-                        <div>
-                            <span><%= product.Description %></span>
+                            <div>
+                                <span><a href="/shop/product/<%= product.Id %>"><%= product.Name %></a> - £<%= parseMoney(product.Price) %></span>
+                            </div>
+                            <div>
+                                <span><%= product.Description %></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-auto align-self-center" style="text-align: right;">
+                    <div class="col-sm align-self-center" style="text-align: right;">
                         <a class="btn btn-warning btn-sm" href="/admin/update-product/<%= product.Id %>?sender=Management" role="button">Edit</a>
                         <a class="btn btn-secondary btn-sm" href="/admin/remove-product/<%= product.Id %>" role="button">Delete</a>
                     </div>

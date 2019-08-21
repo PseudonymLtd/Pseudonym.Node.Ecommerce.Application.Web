@@ -1,12 +1,14 @@
 const DataModel = require('./dataModel')
+const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
 
 module.exports = class Product extends DataModel
 {
-    constructor(id, name, description, price) {
+    constructor(id, name, description, price, imageUri) {
         super(id);
         this.name = name;
         this.description = description;
         this.price = parseFloat(price);
+        this.imageUri = imageUri === undefined || imageUri === null ? defaultImageUri : imageUri;
     }
     
     get Name() {
@@ -33,9 +35,15 @@ module.exports = class Product extends DataModel
         return this.price = parseFloat(value);
     }
 
+    get ImageUri() {
+        return this.imageUri;
+    }
+
+    set ImageUri(value) {
+        return this.imageUri = value;
+    }
+
     static Parse(dataObj) {
-        const product = new Product(dataObj.id, dataObj.name, dataObj.description, dataObj.price);
-        product.Id = parseInt(dataObj.id);
-        return product;
+        return new Product(dataObj.id, dataObj.name, dataObj.description, dataObj.price, dataObj.imageUri);
     }
 }

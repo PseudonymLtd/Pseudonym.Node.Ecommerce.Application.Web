@@ -5,23 +5,18 @@
         <label for="nameInput">Name</label>
         <input class="form-control" id="nameInput" type="text" name="name" aria-describedby="nameHelp" placeholder="Product Name" value="<%= product.name %>" required />
         <small id="nameHelp" class="form-text text-muted">Product names do not have to be unique.</small>
-        <div class="invalid-feedback">
-                Please provide a product name.
-        </div>
     </div>
     <div class="form-group">
         <label for="descInput">Description</label>
         <textarea class="form-control" id="descInput" name="description" placeholder="Product Description" required><%= product.description %></textarea>
-        <div class="invalid-feedback">
-            Please provide a product description.
-        </div>
     </div>
     <div class="form-group">
         <label for="priceInput">Price (£)</label>
         <input class="form-control" id="priceInput" type="number" name="price" step="0.01" value="<%= product.price %>" required/>
-        <div class="invalid-feedback">
-            Please provide a price for this product
-        </div>
+    </div>
+        <div class="form-group">
+        <label for="imageUriInput">Image Uri</label>
+        <input class="form-control" id="imageUriInput" type="text" name="imageUri" placeholder="http://" value="<%= product.imageUri %>"/>
     </div>
     <input type="hidden" id="id" name="id" value="<%= product.id %>">
     <button type="submit" class="btn btn-warning">Update</button>

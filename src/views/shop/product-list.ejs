@@ -4,12 +4,12 @@
     <div class="d-flex" style="padding: 0 0 100px 0; margin-left: -10px; flex-wrap: wrap;">
         <% for (let product of products) { %>
             <div class="card product">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj" class="card-img-top" alt="...">
+                <img src="<%= product.ImageUri %>" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title"><%= product.name %></h5>
-                    <h6 class="card-subtitle mb-2 text-muted">£<%= parseMoney(product.price) %></h6>
+                    <h5 class="card-title"><%= product.Name %></h5>
+                    <h6 class="card-subtitle mb-2 text-muted">£<%= parseMoney(product.Price) %></h6>
                     <p class="card-text"><%= product.description %></p>
-                    <a href="/shop/product/<%= product.id %>" class="btn btn-warning">View</a>
+                    <a href="/shop/product/<%= product.Id %>" class="btn btn-warning">View</a>
                 </div>
             </div>
         <% } %>

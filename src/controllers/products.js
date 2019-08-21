@@ -60,7 +60,7 @@ module.exports.getUpdateProduct = (request, response, next) => {
         }
 
         rendering.render(request, response, 'admin/update-product', 'Edit Product', {
-            product: body.data,
+            product: Product.Parse(body.data),
             sender: request.query.sender ? request.query.sender : 'Management'
         });
 

@@ -6,28 +6,29 @@
 </div>
 <% } %>
 
-<div class="bs-callout bs-callout-warning">
-    <h1><%= product.name %></h1>
+<div class="bs-callout bs-callout-warning" style="height: 340px">
+    <img src="<%= product.ImageUri %>" alt="product image" style="width: auto; height: auto; max-width: 300px; max-height: 300px; float: left; margin-right: 10px" />
+    <h1><%= product.Name %></h1>
     <div>
-        <span><i><%= product.description %></i></span>
+        <span><i><%= product.Description %></i></span>
     </div>
     <div>
-        <span><b>£<%= parseMoney(product.price) %></b></span>
+        <span><b>£<%= parseMoney(product.Price) %></b></span>
     </div>
     <form class="needs-validation" action="/shop/cart" method="POST">
         <div class="form-group" style="display: inline-flex;">
             <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="1" min="1" max="100" style="width: 62px; margin-right: 10px;" required/>
-            <input type="hidden" id="id" name="id" value="<%= product.id %>">
-            <input type="hidden" id="name" name="name" value="<%= product.name %>">
-            <input type="hidden" id="description" name="description" value="<%= product.description %>">
-            <input type="hidden" id="price" name="price" value="<%= product.price %>">
+            <input type="hidden" id="id" name="id" value="<%= product.Id %>">
+            <input type="hidden" id="name" name="name" value="<%= product.Name %>">
+            <input type="hidden" id="description" name="description" value="<%= product.Description %>">
+            <input type="hidden" id="price" name="price" value="<%= product.Price %>">
             <button type="submit" class="btn btn-warning">Add to Cart</button>
         </div>
     </form>
     <footer>
         <div>            
-            <a href="/admin/update-product/<%= product.id %>?sender=ProductDetails">Edit</a> |
-            <a href="/admin/remove-product/<%= product.id %>">Delete</a>
+            <a href="/admin/update-product/<%= product.Id %>?sender=ProductDetails">Edit</a> |
+            <a href="/admin/remove-product/<%= product.Id %>">Delete</a>
         </div>
     </footer>
 </div>
