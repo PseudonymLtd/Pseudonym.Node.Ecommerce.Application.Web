@@ -9,12 +9,14 @@ const adminRoutes = require('./routes/admin');
 const errorRoutes = require('./routes/error');
 const shopRoutes = require('./routes/shop');
 const logging = require('./util/logging');
+const Cart = require('./models/cart');
 
 const logger = new logging.Logger('Application');
 
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 app.set('resource-extensions', ['.css', '.ico', '.js'])
+app.set('cart', new Cart());
 
 app.use((request, response, next) =>
 {

@@ -26,17 +26,23 @@
                     <a class="nav-link" href="/shop">Home</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/shop/products">Products</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/admin/add-product">Add Product</a>
                 </li>
-                <li class="nav-item dropdown">
+                <!--<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/admin/add-product">Add Product</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Logout</a>
                     </div>
-                </li>
+                </li>-->
             </ul>
+            <li class="nav-item navbar-nav" style="display: inline-flex">
+                <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= cart.TotalPrice.toFixed(2) %>)</a> 
+            </li>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>

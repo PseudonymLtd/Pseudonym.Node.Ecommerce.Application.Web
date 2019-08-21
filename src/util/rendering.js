@@ -5,6 +5,7 @@ const render = (request, response, path, title, dataObj) =>
     }
     dataObj.docTitle = title;
     dataObj.localServerUrl = request.protocol + '://' + request.get('host');
+    dataObj.cart = request.app.get('cart');
     response.render(path, dataObj);
 };
 

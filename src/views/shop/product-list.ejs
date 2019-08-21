@@ -1,12 +1,5 @@
-<%- include('includes/header.ejs') %>
+<%- include('../includes/header.ejs') %>
 
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to the shop</h1>
-    <p class="lead">Please feel free to browse products here</p>
-    <hr class="my-4">
-    <p>To find out more about us, click below.</p>
-    <a class="btn btn-warning btn-lg" href="#" role="button">Learn more</a>
-</div>
 <div>
     <% if (products.length > 0) { %>
         <div class="d-flex" style="padding: 0 0 100px 0; margin-left: -10px; flex-wrap: wrap;">
@@ -27,4 +20,4 @@
     <% } %>
 </div>
 
-<%- include('includes/footer.ejs') %>
+<%- include('../includes/footer.ejs') %>

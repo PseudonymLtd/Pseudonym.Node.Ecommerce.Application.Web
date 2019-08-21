@@ -71,3 +71,29 @@ a:active {
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+
+.cartLogo {
+    background-image: url(/images/cart.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 32px;
+    background-position-x: 2px;
+    padding-left: 38px !important;
+}
+
+.cart .bs-callout-warning {
+    border-top-color: #f0ad4e;
+    border-bottom-color: #f0ad4e;
+    border-right-color: #f0ad4e;
+    background-color: white;
+}
+
+.cartPrice {
+    float: right;
+    padding: 10px;
+    margin: 0;
+    border-top-color: #f0ad4e;
+    border-bottom-color: #f0ad4e;
+    border-right-color: #f0ad4e;
+    background-color: white;
+}

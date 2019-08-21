@@ -1,0 +1,23 @@
+module.exports = class CartItem
+{
+    constructor(product, quantity) {
+        this.product = product;
+        this.quantity = parseInt(quantity);
+    }
+
+    get Product() {
+        return this.product;
+    }
+
+    get Quantity() {
+        return this.quantity;
+    }
+
+    set Quantity(value) {
+        return this.quantity = parseInt(value);
+    }
+
+    get Total() {
+        return this.Product.Price * this.Quantity;
+    }
+}

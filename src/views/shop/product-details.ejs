@@ -1,0 +1,35 @@
+<%- include('../includes/header.ejs') %>
+
+<% if (quantityInCart > 0) { %>
+<div class="alert alert-warning" role="alert">
+    You have <%= quantityInCart %> of these items in your <a href="/shop/cart">Cart</a>.
+</div>
+<% } %>
+
+<div class="bs-callout bs-callout-warning">
+    <h1><%= product.name %></h1>
+    <div>
+        <span><i><%= product.description %></i></span>
+    </div>
+    <div>
+        <span><b>£<%= product.price.toFixed(2) %></b></span>
+    </div>
+    <form class="needs-validation" action="/shop/cart" method="POST">
+        <div class="form-group" style="display: inline-flex;">
+            <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="1" min="1" max="100" style="width: 62px; margin-right: 10px;" required/>
+            <input type="hidden" id="id" name="id" value="<%= product.id %>">
+            <input type="hidden" id="name" name="name" value="<%= product.name %>">
+            <input type="hidden" id="description" name="description" value="<%= product.description %>">
+            <input type="hidden" id="price" name="price" value="<%= product.price %>">
+            <button type="submit" class="btn btn-warning">Add to Cart</button>
+        </div>
+    </form>
+    <footer>
+        <div>            
+            <a href="/admin/update-product/<%= product.id %>">Edit</a> |
+            <a href="/admin/remove-product/<%= product.id %>">Delete</a>
+        </div>
+    </footer>
+</div>
+        
+<%- include('../includes/footer.ejs') %>
