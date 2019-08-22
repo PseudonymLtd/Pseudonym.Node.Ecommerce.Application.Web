@@ -17,23 +17,24 @@ app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 app.set('resource-extensions', ['.css', '.ico', '.js'])
 app.set('cart', new Cart());
+app.set('selected-postal-service', -1);
 app.set('postal-services', [
     {
         Id: 1,
-        Name: 'Standard',
+        Name: 'Standard Delivery',
         Window: '3 to 5 Working Days',
         Price: 3.49
     },
     {
         Id: 2,
-        Name: 'Express',
+        Name: 'Express Delivery',
         Window: '1 to 2 Working Days',
         Price: 4.99
     },
     {
         Id: 3,
         Name: 'Special Delivery',
-        Window: 'Next Working Day',
+        Window: '1 Working Day',
         Price: 7.24
     }
   ]);

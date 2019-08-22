@@ -49,10 +49,11 @@
 </div>
 <footer class="bs-callout bs-callout-warning cartPrice">
     <p style="float: left;"><b>£<%= parseMoney(order.Total) %></b></p>
-    <div style="float: right;">
-        <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
+    <form method="POST" action="/shop/pay" style="float: right;">
+        <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= order.PostalService.Id %>">
+        <button type="submit" class="btn btn-warning btn-lg">Pay</button>
         <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>
-    </div>
+    </form>
 </footer> 
 
 <%- include('../includes/footer.ejs') %>

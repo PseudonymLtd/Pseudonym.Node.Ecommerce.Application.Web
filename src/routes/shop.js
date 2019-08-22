@@ -10,6 +10,7 @@ router.get('/cart', shopController.getCartPage);
 router.post('/cart', shopController.postAddToCart);
 router.get('/cart/product/:id', shopController.getRemoveCartItem);
 router.post('/cart/product/:id', shopController.postEditCartItem);
-router.get('/checkout/:postalServiceId', shopController.getCheckoutPage);
+router.post('/checkout', shopController.postCheckoutPage);
+router.post('/pay', shopController.postPay);
 
 module.exports = router;

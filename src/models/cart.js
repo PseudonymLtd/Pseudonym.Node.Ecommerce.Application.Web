@@ -22,6 +22,10 @@ module.exports = class Cart
         return this.items.length === 0;
     }
 
+    Reset() {
+        this.items = [];
+    }
+
     FindItem(productId) {
         return this.items.find(ci => ci.Product.Id == parseInt(productId));
     }

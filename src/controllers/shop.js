@@ -70,7 +70,9 @@ module.exports.getCartPage = (request, response, next) => {
   const cart = request.app.get('cart');
 
   if (cart.IsEmpty) {
-    return rendering.render(request, response, 'shop/cart', `Cart`);
+    return rendering.render(request, response, 'shop/cart', `Cart`, {
+      preferredPostalService: request.app.get('selected-postal-service')
+    });
   }
 
   return httpClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
@@ -83,7 +85,9 @@ module.exports.getCartPage = (request, response, next) => {
       console.warn(body.additionalInformation);
     }
 
-    return rendering.render(request, response, 'shop/cart', `Cart`);
+    return rendering.render(request, response, 'shop/cart', `Cart`, {
+      preferredPostalService: request.app.get('selected-postal-service')
+    });
   }, next);
 };
 
@@ -124,7 +128,7 @@ module.exports.getRemoveCartItem = (request, response, next) => {
   return rendering.render(request, response, 'shop/cart', `Cart`);
 };
 
-module.exports.getCheckoutPage = (request, response, next) => {
+module.exports.postCheckoutPage = (request, response, next) => {
   const cart = request.app.get('cart');
   if (cart.IsEmpty) {
     response.redirect('/');
@@ -132,9 +136,31 @@ module.exports.getCheckoutPage = (request, response, next) => {
   else {
     const postalServices = request.app.get('postal-services');
     const order = new Order(cart.Items);
-    order.PostalService = postalServices.find(ps => ps.Id == request.params.postalServiceId);
+    const postalServiceId = parseInt(request.body.postalServiceId);
+    order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
+    request.app.set('selected-postal-service', postalServiceId);
 
     rendering.render(request, response, 'shop/checkout', 'Checkout', {
+      order: order
+    });
+  }
+};
+
+module.exports.postPay = (request, response, next) => {
+  const cart = request.app.get('cart');
+  if (cart.IsEmpty) {
+    response.redirect('/');
+  }
+  else {
+    const postalServices = request.app.get('postal-services');
+    const order = new Order(cart.Items);
+    const postalServiceId = parseInt(request.body.postalServiceId);
+    order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
+
+    //Pay
+    cart.Reset();
+
+    rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
       order: order
     });
   }
