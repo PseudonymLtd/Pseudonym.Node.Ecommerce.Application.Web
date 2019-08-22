@@ -1,16 +1,13 @@
 const http = require('request');
-const logging = require('../util/logging');
+const Logger= require('../util/logging');
 const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');
 
-const logger = new logging.Logger('ProductsController');
+const logger = new Logger('ProductsController');
 
 module.exports.getAddProduct = (request, response, next) => {
-
-    rendering.render(request, response, 'admin/add-product', 'Add Product');
-
-    return logger.debug('Page Served');
+    return rendering.render(request, response, 'admin/add-product', 'Add Product');
 };
 
 module.exports.getManageProducts = (request, response, next) => {
@@ -26,8 +23,6 @@ module.exports.getManageProducts = (request, response, next) => {
         logger.info(`Loaded ${products.length} product(s)`);
 
         rendering.render(request, response, 'admin/manage-products', 'Manage Products', { products: products } );
-
-        return logger.debug('Page Served');
       });
 };
 
@@ -35,7 +30,7 @@ module.exports.postAddProduct = (request, response, next) => {
 
     var newProduct = Product.Parse(request.body);
 
-    http(`${serviceDirectory.ProductsServiceUrl}/api/product`, { json: true, body: newProduct, method: "PUT" }, (err, res, body) => {
+    return http(`${serviceDirectory.ProductsServiceUrl}/api/product`, { json: true, body: newProduct, method: "PUT" }, (err, res, body) => {
         if (err) { return logger.fatal(err); }
 
         if (body.code !== 200) {
@@ -63,8 +58,6 @@ module.exports.getUpdateProduct = (request, response, next) => {
             product: Product.Parse(body.data),
             sender: request.query.sender ? request.query.sender : 'Management'
         });
-
-        return logger.debug('Page Served');
     });
 };
 
@@ -73,7 +66,7 @@ module.exports.postUpdateProduct = (request, response, next) => {
 
     var updatedProduct = Product.Parse(request.body);
 
-    http(`${serviceDirectory.ProductsServiceUrl}/api/product/${updatedProduct.id}`, { json: true, body: updatedProduct, method: "PUT" }, (err, res, body) => {
+    return http(`${serviceDirectory.ProductsServiceUrl}/api/product/${updatedProduct.id}`, { json: true, body: updatedProduct, method: "PUT" }, (err, res, body) => {
         if (err) { return logger.fatal(err); }
 
         if (body.code !== 200) {

@@ -1,4 +1,5 @@
 const CartItem = require('../models/cartItem');
+const vatPercentage = 20.00;
 
 module.exports = class Cart
 {
@@ -14,12 +15,24 @@ module.exports = class Cart
         return this.IsEmpty ? 0 : this.items.map(p => p.Quantity).reduce((t, q) => t + q);
     }
 
-    get TotalPrice() {
+    get SubTotal() {
         return this.IsEmpty ? 0 : this.items.map(p => p.Total).reduce((t, p) => t + p);
+    }
+
+    get VAT() {
+        return this.SubTotal * (vatPercentage / 100);
+    }
+
+    get Total() {
+        return this.SubTotal + this.VAT;
     }
 
     get IsEmpty() {
         return this.items.length === 0;
+    }
+
+    get VatPercentage() {
+        return vatPercentage;
     }
 
     FindItem(productId) {

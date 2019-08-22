@@ -1,4 +1,4 @@
-class Logger
+module.exports = class Logger
 {
     constructor(name) {
         this._loggerName = name != undefined ? name : "General";
@@ -33,5 +33,3 @@ class Logger
         console.warn(`${Date.now()} [WARN] ${this.Name}: ${message}`);
     }
 }
-
-module.exports.Logger = Logger;

@@ -1,1 +1,1 @@
-module.exports.ProductsServiceUrl = "http://localhost:3001";
+module.exports.ProductsServiceUrl = 'http://localhost:3001';

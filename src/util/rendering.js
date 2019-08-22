@@ -1,3 +1,7 @@
+const Logger= require('../util/logging');
+
+const logger = new Logger('Application');
+
 const render = (request, response, path, title, dataObj) =>
 {
     if (dataObj === undefined || dataObj === null) {
@@ -9,6 +13,7 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.parseMoney = parseMoney;
 
     response.render(path, dataObj);
+    logger.debug('Page Served');
 };
 
 const parseMoney = (int) => {

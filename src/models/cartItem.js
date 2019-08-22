@@ -9,6 +9,10 @@ module.exports = class CartItem
         return this.product;
     }
 
+    set Product(value) {
+        return this.product = value;
+    }
+
     get Quantity() {
         return this.quantity;
     }

@@ -17,18 +17,28 @@
                 </div>
             </div>
         <% } %>
+        <div class="container-fluid" style="padding: 0">
+            <div class="row align-items-center justify-content-between">
+                <div class="col align-self-center">
+                    <span>VAT @ <%= cart.VatPercentage.toFixed(2) %>%</span>
+                </div>
+                <div class="col align-self-center" style="text-align: right;">
+                    <span>£<%= parseMoney(cart.VAT) %></span>
+                </div>
+            </div>
+        </div>
         <hr class="my-2">
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center" style="text-align: right;">
-                    <span><b>£<%= parseMoney(cart.TotalPrice) %></b></span>
+                    <span><b>£<%= parseMoney(cart.Total) %></b></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <footer class="bs-callout bs-callout-warning cartPrice">
-    <p style="float: left;"><b>£<%= parseMoney(cart.TotalPrice) %></b></p>
+    <p style="float: left;"><b>£<%= parseMoney(cart.Total) %></b></p>
     <div style="float: right;">
         <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
         <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>

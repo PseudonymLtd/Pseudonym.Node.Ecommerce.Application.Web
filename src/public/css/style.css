@@ -89,7 +89,35 @@ a:active {
 }
 
 .product {
+    max-height: 600px;
     max-width: 257px; 
     min-width: 257px; 
     margin: 10px;
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ffc107;
+}
+
+.product .card-img-top {
+    border-top-left-radius: calc(.20rem - 1px);
+    border-top-right-radius: calc(.20rem - 1px);
+}
+
+.errorInfo {
+    background-color: lightyellow;
+    white-space: pre-wrap;
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ffc107;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    width: 100%;
+    min-height: 300px;
+    max-height: 500px;
+    resize: none;
+}
+
+.errorInfo:active {
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ffc107;
+    box-shadow: #d9534f;
 }

@@ -39,7 +39,7 @@
                 </li>
             </ul>
             <li class="nav-item navbar-nav" style="display: inline-flex">
-                <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= parseMoney(cart.TotalPrice) %>)</a> 
+                <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= parseMoney(cart.SubTotal) %>)</a> 
             </li>
             <form action="/shop/products" method="GET" class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" name="Search" placeholder="Search" aria-label="Search">

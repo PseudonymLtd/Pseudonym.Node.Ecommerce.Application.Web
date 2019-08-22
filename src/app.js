@@ -6,12 +6,12 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const adminRoutes = require('./routes/admin');
-const errorRoutes = require('./routes/error');
 const shopRoutes = require('./routes/shop');
-const logging = require('./util/logging');
+const errorsController = require('./controllers/errors');
+const Logger= require('./util/logging');
 const Cart = require('./models/cart');
 
-const logger = new logging.Logger('Application');
+const logger = new Logger('Application');
 
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
@@ -43,6 +43,7 @@ app.use(bodyParser.json());
 
 app.use('/admin', adminRoutes);
 app.use('/shop', shopRoutes);
-app.use(errorRoutes);
+app.use(errorsController.get500);
+app.use(errorsController.get404);
 
 app.listen(3000);
