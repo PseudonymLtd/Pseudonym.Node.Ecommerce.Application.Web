@@ -13,7 +13,6 @@ module.exports.get404 = (request, response, next) => {
 };
 
 module.exports.get500 = (error, request, response, next) => {
-    console.log('500!');
     if (error !== null && error !== undefined) {
         logger.error(`500 Internal Server Error: ${request.url}`);
         console.error(error);
