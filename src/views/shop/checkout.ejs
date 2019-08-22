@@ -5,7 +5,7 @@
 <div class="cart">
     <div class="bs-callout bs-callout-warning">
         <h1>Order</h1>
-        <% for (let item of cart.Items) { %>
+        <% for (let item of order.Items) { %>
             <div class="container-fluid" style="padding: 0">
                 <div class="row align-items-center justify-content-between">
                     <div class="col align-self-center">
@@ -20,10 +20,20 @@
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center">
-                    <span>VAT @ <%= cart.VatPercentage.toFixed(2) %>%</span>
+                    <span>VAT @ <%= order.VatPercentage.toFixed(2) %>%</span>
                 </div>
                 <div class="col align-self-center" style="text-align: right;">
-                    <span>£<%= parseMoney(cart.VAT) %></span>
+                    <span>£<%= parseMoney(order.VAT) %></span>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="padding: 0">
+            <div class="row align-items-center justify-content-between">
+                <div class="col align-self-center">
+                    <span>Postage & Packaging - <%= order.PostalService.Name %></span>
+                </div>
+                <div class="col align-self-center" style="text-align: right;">
+                    <span>£<%= parseMoney(order.PostalService.Price) %></span>
                 </div>
             </div>
         </div>
@@ -31,14 +41,14 @@
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center" style="text-align: right;">
-                    <span><b>£<%= parseMoney(cart.Total) %></b></span>
+                    <span><b>£<%= parseMoney(order.Total) %></b></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <footer class="bs-callout bs-callout-warning cartPrice">
-    <p style="float: left;"><b>£<%= parseMoney(cart.Total) %></b></p>
+    <p style="float: left;"><b>£<%= parseMoney(order.Total) %></b></p>
     <div style="float: right;">
         <a class="btn btn-warning btn-lg" href="#" role="button">Pay</a>
         <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>

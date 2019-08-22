@@ -4,6 +4,7 @@ const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
 const HttpClient = require('../util/httpClient');
 const Product = require('../models/product');
+const Order = require('../models/order');
 
 const logger = new Logger('ShopController');
 const httpClient = new HttpClient(serviceDirectory.ProductsServiceUrl);
@@ -129,7 +130,13 @@ module.exports.getCheckoutPage = (request, response, next) => {
     response.redirect('/');
   }
   else {
-    rendering.render(request, response, 'shop/checkout', 'Checkout');
+    const postalServices = request.app.get('postal-services');
+    const order = new Order(cart.Items);
+    order.PostalService = postalServices.find(ps => ps.Id == request.params.postalServiceId);
+
+    rendering.render(request, response, 'shop/checkout', 'Checkout', {
+      order: order
+    });
   }
 };
 

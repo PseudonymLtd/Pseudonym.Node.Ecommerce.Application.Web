@@ -1,5 +1,42 @@
 <%- include('../includes/header.ejs') %>
 
+<script type="text/javascript">
+(function() {
+    'use strict';
+
+    const postalServices = JSON.parse($("<textarea/>").html('<%= JSON.stringify(postalServices) %>').text());
+
+    let selectedPostalServiceId = 1;
+
+    const checkoutBtnClick = (e) => {
+        window.location.href = `/shop/checkout/${selectedPostalServiceId}`;
+    }
+
+    window.addEventListener('load', function() {
+        $('#postalDropdown').on('hidden.bs.dropdown', function (event) {
+            if (event.clickEvent) {
+                for (let child of $('#postalDropdownItems')[0].children) {
+                    child.classList.remove('active');
+                }
+                const source = event.clickEvent.originalEvent.srcElement;
+                source.classList.add('active');
+
+                selectedPostalServiceId = parseInt(source.id.split('-')[1]);
+                const service = postalServices.find(p => p.Id === selectedPostalServiceId);
+
+                console.log(service);
+
+                $('#postalCost')[0].innerText = service.Price.toFixed(2);
+                $('#postalDropDownTitle')[0].innerText = source.innerText;
+                const checkoutBtn = $('#checkoutBtn')[0];
+                checkoutBtn.classList.remove('disabled');
+                checkoutBtn.addEventListener("click", checkoutBtnClick);
+            }
+        });
+    });
+})();
+</script>
+
 <p class="lead">The items below are in your cart; manage them below or head to the checkout.</p>
 <hr class="my-4">
 <div class="cart">
@@ -45,16 +82,33 @@
                 </div>
             </div>
         <% } %>
+        <div class="bs-callout bs-callout-warning">
+            <img src="https://www.stamps.com/assets/images/shipping/hidden-postage/hidden-postage-large.jpg" class="img-fluid" alt="product image" style="width: 80px; height: 80px; margin-right: 8px; float: left;" />
+            <h1 style="color: #f0ad4e">Postage & Packaging</h1>
+            <div>
+                <span>Please select from the below list your desired postal service.</span>
+            </div>
+            <hr class="my-2">
+            <div id="postalDropdown" class="dropdown show">
+                <a id="postalDropDownTitle" class="btn btn-warning dropdown-toggle" style="width: 362px;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select a Postal Service
+                </a>
+                <div id="postalDropdownItems" class="dropdown-menu" aria-labelledby="postalDropdown">
+                    <% for (let service of postalServices) { %>
+                        <option id="postalDropdownItems-<%= service.Id %>" class="dropdown-item"><%= service.Name %> - <%= service.Window %> (£<%= service.Price %>)</option>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     <% } %>
 </div>
 <% if (!cart.IsEmpty) { %>
     <footer class="bs-callout bs-callout-warning cartPrice">
-        <p style="float: left;"><b>£<%= parseMoney(cart.SubTotal) %></b></p>
+        <p style="float: left;"><b>£<%= parseMoney(cart.SubTotal) %></b><span class="text-muted" style="font-size: small;"> + £<span id="postalCost">0.00</span> P&P</span></p>
         <div style="float: right;">
-            <a class="btn btn-warning btn-lg" href="/shop/checkout" role="button">Checkout</a>
+            <div id="checkoutBtn" class="btn btn-warning btn-lg disabled" role="button">Checkout</div>
             <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
         </div>
     </footer> 
 <% } %>
-
 <%- include('../includes/footer.ejs') %>

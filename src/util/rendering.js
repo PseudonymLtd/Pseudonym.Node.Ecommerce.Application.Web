@@ -10,6 +10,7 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.docTitle = title;
     dataObj.localServerUrl = request.protocol + '://' + request.get('host');
     dataObj.cart = request.app.get('cart');
+    dataObj.postalServices = request.app.get('postal-services');
     dataObj.parseMoney = parseMoney;
 
     response.render(path, dataObj);
