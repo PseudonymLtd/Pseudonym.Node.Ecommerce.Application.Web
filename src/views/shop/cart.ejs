@@ -9,12 +9,7 @@
 
     let selectedPostalServiceId = parseInt(previousPostalService);
 
-    const checkoutBtnClick = (e) => {
-        window.location.href = `/shop/checkout/${selectedPostalServiceId}`;
-    }
-
     window.addEventListener('load', function() {
-        $('#checkoutBtn').on("click", checkoutBtnClick);
         $('#postalDropdown').on('hidden.bs.dropdown', function (event) {
             if (event.clickEvent) {
                 for (let child of $('#postalDropdownItems')[0].children) {
@@ -29,7 +24,7 @@
 
                 $('#postalCost')[0].innerText = service.Price.toFixed(2);
                 $('#postalDropDownTitle')[0].innerText = source.innerText;
-                $('#checkoutBtn')[0].classList.remove('disabled');
+                $('#checkoutBtn')[0].disabled = false;
                 $('#postalServiceId')[0].value = selectedPostalServiceId;
             }
         });
@@ -90,7 +85,7 @@
             </div>
             <hr class="my-2">
             <div id="postalDropdown" class="dropdown">
-                <a id="postalDropDownTitle" class="btn btn-warning dropdown-toggle" style="width: 362px;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a id="postalDropDownTitle" class="btn btn-warning dropdown-toggle" style="width: 377px;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <% if (postalServices.map(ps => ps.Id).includes(preferredPostalService)) { const preferredService = postalServices.find(p => p.Id === preferredPostalService); %>
                         <%= preferredService.Name %> - <%= preferredService.Window %> (£<%= preferredService.Price %>)
                     <% } else { %>
@@ -122,7 +117,7 @@
         </p>
         <form method="POST" action="/shop/checkout" style="float: right;">
             <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= postalServices.map(ps => ps.Id).includes(preferredPostalService) ? preferredPostalService : 0 %>">
-            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg <%= postalServices.map(ps => ps.Id).includes(preferredPostalService) ? '' : 'disabled' %>">Checkout</button>
+            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg" <%= postalServices.map(ps => ps.Id).includes(preferredPostalService) ? '' : 'disabled' %>>Checkout</button>
             <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
         </form>
     </footer> 
