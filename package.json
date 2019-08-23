@@ -1,5 +1,6 @@
 {
   "name": "application.ecommerce.shop",
+  "private": true,
   "version": "1.0.0",
   "description": "Application Ecommerce Shop UI",
   "main": "src/app.js",
