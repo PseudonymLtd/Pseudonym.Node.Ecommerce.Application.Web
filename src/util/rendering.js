@@ -1,9 +1,7 @@
-const Logger= require('../util/logging');
-
-const logger = new Logger('Application');
-
 const render = (request, response, path, title, dataObj) =>
 {
+    const logger = request.app.get('logger');
+
     if (dataObj === undefined || dataObj === null) {
         dataObj = {};
     }

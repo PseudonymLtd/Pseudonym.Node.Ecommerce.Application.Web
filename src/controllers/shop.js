@@ -1,181 +1,184 @@
-const http = require('request');
-const Logger= require('../util/logging');
+const Framework = require('library.ecommerce.framework');
 const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
-const HttpClient = require('../util/httpClient');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
-const logger = new Logger('ShopController');
-const httpClient = new HttpClient(serviceDirectory.ProductsServiceUrl);
+module.exports = class ShopController extends Framework.Service.Controller {
+    constructor() {
+        super('Shop Controller');
 
-module.exports.getIndex = (request, response, next) => {
-  return rendering.render(request, response, 'shop', 'Shop');
-};
+        this.httpClient = new Framework.Utils.HttpClient(serviceDirectory.ProductsServiceUrl);
 
-module.exports.getProductsListPage = (request, response, next) => {
-  return httpClient.Get('api/products', (body) => {
+        this.Get('/', (request, response, next) => {
+            return rendering.render(request, response, 'shop', 'Shop');
+        });
 
-    //export dto to model
-    let products = body.data.map(b => Product.Parse(b));
-    logger.info(`Loaded ${products.length} product(s)`);
+        this.Get('/products', (request, response, next) => {
+            return this.httpClient.Get('api/products', (body) => {
 
-    //apply search critera
-    if (request.query.Search && request.query.Search.trim() != '') {
-      products = products.filter(p => {
-          const words = (p.Name.trim() + ' ' + p.Description.trim()).toLowerCase().split(' ');
-          const searchTerms = request.query.Search.trim().toLowerCase().split(' ');
+                //export dto to model
+                let products = body.data.map(b => Product.Parse(b));
+                this.logger.info(`Loaded ${products.length} product(s)`);
 
-          for (let term of searchTerms) {
-            if (words.includes(term)) { return true; }
-          }
+                //apply search critera
+                if (request.query.Search && request.query.Search.trim() != '') {
+                    products = products.filter(p => {
+                        const words = (p.Name.trim() + ' ' + p.Description.trim()).toLowerCase().split(' ');
+                        const searchTerms = request.query.Search.trim().toLowerCase().split(' ');
 
-          return false;
-      })
+                        for (let term of searchTerms) {
+                            if (words.includes(term)) { return true; }
+                        }
+
+                        return false;
+                    })
+                }
+
+                //update cart objects
+                syncCartItems(request, products);
+
+                if (products.length === 1) {
+                    response.redirect(`/shop/product/${products[0].Id}`);
+                }
+                else {
+                    rendering.render(request, response, 'shop/product-list', 'Products', { products: products });
+                }
+            }, next);
+        });
+
+        this.Get('/product/:id', (request, response, next) => {
+            return this.httpClient.Get(`api/product/${request.params.id}`, (body) => {
+
+                const cart = request.app.get('cart');
+                const existingCartItem = cart.FindItem(request.params.id);
+                const product = Product.Parse(body.data);
+
+                //update cart object
+                if (existingCartItem) {
+                    existingCartItem.Product = product;
+                }
+
+                rendering.render(request, response, 'shop/product-details', `Product Details`, {
+                    quantityInCart: existingCartItem ? existingCartItem.Quantity : 0,
+                    product: product
+                });
+            }, next);
+        });
+
+        this.Get('/cart', (request, response, next) => {
+
+            const cart = request.app.get('cart');
+
+            if (cart.IsEmpty) {
+                return rendering.render(request, response, 'shop/cart', `Cart`, {
+                    preferredPostalService: request.app.get('selected-postal-service')
+                });
+            }
+
+            return this.httpClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
+
+                //update cart objects
+                syncCartItems(request, body.data);
+
+                if (body.code === 206) {
+                    this.logger.warn('request for updated products from cart was only partially successful:');
+                    console.warn(body.additionalInformation);
+                }
+
+                return rendering.render(request, response, 'shop/cart', `Cart`, {
+                    preferredPostalService: request.app.get('selected-postal-service')
+                });
+            }, next);
+        });
+
+        this.Get('/cart/product/:id', (request, response, next) => {
+            const cart = request.app.get('cart');
+            cart.RemoveItem(request.params.id);
+
+            return rendering.render(request, response, 'shop/cart', `Cart`);
+        });
+
+        this.Post('/cart', (request, response, next) => {
+
+            let qty = parseInt(request.body.quantity);
+            const product = Product.Parse(request.body);
+            const cart = request.app.get('cart');
+
+            const existingCartItem = cart.FindItem(product.Id);
+            if (existingCartItem) {
+                existingCartItem.Quantity += qty;
+                qty = existingCartItem.Quantity;
+            }
+            else {
+                cart.AddItem(product, qty);
+            }
+
+            return response.redirect(`/shop/product/${product.Id}`);
+        });
+
+        this.Post('/cart/product/:id', (request, response, next) => {
+
+            const qty = parseInt(request.body.quantity);
+            const cart = request.app.get('cart');
+            const existingCartItem = cart.FindItem(request.params.id);
+            if (existingCartItem) {
+                cart.RemoveItem(request.params.id, existingCartItem.Quantity - qty);
+            }
+
+            return rendering.render(request, response, 'shop/cart', `Cart`);
+        });
+
+        this.Post('/checkout', (request, response, next) => {
+            const cart = request.app.get('cart');
+            if (cart.IsEmpty) {
+                response.redirect('/');
+            }
+            else {
+                const postalServices = request.app.get('postal-services');
+                const order = new Order(cart.Items);
+                const postalServiceId = parseInt(request.body.postalServiceId);
+                order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
+                request.app.set('selected-postal-service', postalServiceId);
+
+                rendering.render(request, response, 'shop/checkout', 'Checkout', {
+                    order: order
+                });
+            }
+        });
+
+        this.Post('/pay', (request, response, next) => {
+            const cart = request.app.get('cart');
+            if (cart.IsEmpty) {
+                response.redirect('/');
+            }
+            else {
+                const postalServices = request.app.get('postal-services');
+                const order = new Order(cart.Items);
+                const postalServiceId = parseInt(request.body.postalServiceId);
+                order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
+
+                //Pay
+                cart.Reset();
+
+                rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
+                    order: order
+                });
+            }
+        });
+
+        const syncCartItems = (request, products) => {
+            const cart = request.app.get('cart');
+
+            for (let cartItem of cart.Items) {
+                const product = products.find(p => p.id === cartItem.Product.Id);
+                if (product) {
+                    cartItem.Product = Product.Parse(product);
+                }
+                else {
+                    cart.RemoveItem(cartItem.Product.Id);
+                }
+            }
+        }
     }
-
-    //update cart objects
-    syncCartItems(request, products);
-
-    if (products.length === 1) {
-      response.redirect(`/shop/product/${products[0].Id}`);
-    }
-    else {
-      rendering.render(request, response, 'shop/product-list', 'Products', { products: products });
-    }
-  }, next);
-};
-
-module.exports.getProductDetailsPage = (request, response, next) => {
-  return httpClient.Get(`api/product/${request.params.id}`, (body) => {
-    
-    const cart = request.app.get('cart');
-    const existingCartItem = cart.FindItem(request.params.id);
-    const product = Product.Parse(body.data);
-
-    //update cart object
-    if (existingCartItem) {
-      existingCartItem.Product = product;
-    }
-
-    rendering.render(request, response, 'shop/product-details', `Product Details`, {
-      quantityInCart: existingCartItem ? existingCartItem.Quantity : 0,
-      product: product
-    });
-  }, next);
-};
-
-module.exports.getCartPage = (request, response, next) => {
-  
-  const cart = request.app.get('cart');
-
-  if (cart.IsEmpty) {
-    return rendering.render(request, response, 'shop/cart', `Cart`, {
-      preferredPostalService: request.app.get('selected-postal-service')
-    });
-  }
-
-  return httpClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
-    
-    //update cart objects
-    syncCartItems(request, body.data);
-
-    if (body.code === 202) {
-      logger.warn('request for updated products from cart was only partially successful:');
-      console.warn(body.additionalInformation);
-    }
-
-    return rendering.render(request, response, 'shop/cart', `Cart`, {
-      preferredPostalService: request.app.get('selected-postal-service')
-    });
-  }, next);
-};
-
-module.exports.postAddToCart = (request, response, next) => {
-
-  let qty = parseInt(request.body.quantity);
-  const product = Product.Parse(request.body);
-  const cart = request.app.get('cart');
-
-  const existingCartItem = cart.FindItem(product.Id);
-  if (existingCartItem) {
-    existingCartItem.Quantity += qty;
-    qty = existingCartItem.Quantity;
-  }
-  else {
-    cart.AddItem(product, qty);
-  }
-
-  return response.redirect(`/shop/product/${product.Id}`);
-};
-
-module.exports.postEditCartItem = (request, response, next) => {
-
-  const qty = parseInt(request.body.quantity);
-  const cart = request.app.get('cart');
-  const existingCartItem = cart.FindItem(request.params.id);
-  if (existingCartItem) {
-    cart.RemoveItem(request.params.id, existingCartItem.Quantity - qty);
-  }
-
-  return rendering.render(request, response, 'shop/cart', `Cart`);
-};
-
-module.exports.getRemoveCartItem = (request, response, next) => {
-  const cart = request.app.get('cart');
-  cart.RemoveItem(request.params.id);
-
-  return rendering.render(request, response, 'shop/cart', `Cart`);
-};
-
-module.exports.postCheckoutPage = (request, response, next) => {
-  const cart = request.app.get('cart');
-  if (cart.IsEmpty) {
-    response.redirect('/');
-  }
-  else {
-    const postalServices = request.app.get('postal-services');
-    const order = new Order(cart.Items);
-    const postalServiceId = parseInt(request.body.postalServiceId);
-    order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
-    request.app.set('selected-postal-service', postalServiceId);
-
-    rendering.render(request, response, 'shop/checkout', 'Checkout', {
-      order: order
-    });
-  }
-};
-
-module.exports.postPay = (request, response, next) => {
-  const cart = request.app.get('cart');
-  if (cart.IsEmpty) {
-    response.redirect('/');
-  }
-  else {
-    const postalServices = request.app.get('postal-services');
-    const order = new Order(cart.Items);
-    const postalServiceId = parseInt(request.body.postalServiceId);
-    order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
-
-    //Pay
-    cart.Reset();
-
-    rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
-      order: order
-    });
-  }
-};
-
-const syncCartItems = (request, products) => {
-  const cart = request.app.get('cart');
-
-  for(let cartItem of cart.Items) {
-    const product = products.find(p => p.id === cartItem.Product.Id);
-    if (product) {
-      cartItem.Product = Product.Parse(product);
-    }
-    else {
-      cart.RemoveItem(cartItem.Product.Id);
-    }
-  }
 }

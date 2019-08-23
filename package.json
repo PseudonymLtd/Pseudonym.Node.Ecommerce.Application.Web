@@ -6,7 +6,8 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/app.js"
+    "start": "bash ./build/start.sh",
+    "install": "bash ./build/install.sh"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,6 @@
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "jquery": "^3.4.1",
-    "popper": "^1.0.1",
-    "request": "^2.88.0"
+    "popper": "^1.0.1"
   }
 }

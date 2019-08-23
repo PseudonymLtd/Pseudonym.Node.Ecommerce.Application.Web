@@ -1,7 +1,7 @@
-const DataModel = require('./dataModel')
+const Framework = require('library.ecommerce.framework');
 const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
 
-module.exports = class Product extends DataModel
+module.exports = class Product extends Framework.Models.DataModel
 {
     constructor(id, name, description, price, imageUri) {
         super(id);

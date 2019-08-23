@@ -62,3 +62,4 @@ typings/
 
 # vscode settings build output
 .vscode/
+lib/
