@@ -8,14 +8,12 @@ module.exports = class ShopController extends Framework.Service.Controller {
     constructor() {
         super('Shop Controller');
 
-        this.httpClient = new Framework.Utils.HttpClient(serviceDirectory.ProductsServiceUrl);
-
         this.Get('/', (request, response, next) => {
             return rendering.render(request, response, 'shop', 'Shop');
         });
 
         this.Get('/products', (request, response, next) => {
-            return this.httpClient.Get('api/products', (body) => {
+            return serviceDirectory.ProductsServiceClient.Get('api/products', (body) => {
 
                 //export dto to model
                 let products = body.data.map(b => Product.Parse(b));
@@ -48,7 +46,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Get('/product/:id', (request, response, next) => {
-            return this.httpClient.Get(`api/product/${request.params.id}`, (body) => {
+            return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
 
                 const cart = request.app.get('cart');
                 const existingCartItem = cart.FindItem(request.params.id);
@@ -76,7 +74,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 });
             }
 
-            return this.httpClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
+            return serviceDirectory.ProductsServiceClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
 
                 //update cart objects
                 syncCartItems(request, body.data);
@@ -158,12 +156,13 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 const postalServiceId = parseInt(request.body.postalServiceId);
                 order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
 
-                //Pay
-                cart.Reset();
+                return serviceDirectory.OrdersServiceClient.Put('api/order', order, (body) => {
+                    cart.Reset();
 
-                rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
-                    order: order
-                });
+                    rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
+                        order: order
+                    });
+                }, next);
             }
         });
 

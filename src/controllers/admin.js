@@ -7,8 +7,6 @@ module.exports = class AdminController extends Framework.Service.Controller {
     constructor() {
         super('Admin Controller');
 
-        this.httpClient = new Framework.Utils.HttpClient(serviceDirectory.ProductsServiceUrl);
-
         this.Get('/add-product', (request, response, next) => {
             return rendering.render(request, response, 'admin/add-product', 'Add Product');
         });
@@ -16,7 +14,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         this.Post('/add-product', (request, response, next) => {
             var newProduct = Product.Parse(request.body);
         
-            return this.httpClient.Put('api/product', newProduct, (body) => {
+            return serviceDirectory.ProductsServiceClient.Put('api/product', newProduct, (body) => {
                 this.Logger.debug('add product result:');
                 console.debug(body);
         
@@ -25,7 +23,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/remove-product/:id', (request, response, next) => {
-            return this.httpClient.Delete(`api/product/${request.params.id}`, (body) => {
+            return serviceDirectory.ProductsServiceClient.Delete(`api/product/${request.params.id}`, (body) => {
                 this.Logger.debug('remove product result:');
                 console.debug(body);
         
@@ -38,7 +36,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/update-product/:id', (request, response, next) => {
-            return this.httpClient.Get(`api/product/${request.params.id}`, (body) => {
+            return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
                 rendering.render(request, response, 'admin/update-product', 'Edit Product', {
                     product: Product.Parse(body.data),
                     sender: request.query.sender ? request.query.sender : 'Management'
@@ -50,7 +48,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
 
             var updatedProduct = Product.Parse(request.body);
         
-            return this.httpClient.Put(`api/product/${updatedProduct.id}`, updatedProduct, (body) => {
+            return serviceDirectory.ProductsServiceClient.Put(`api/product/${updatedProduct.id}`, updatedProduct, (body) => {
                 this.Logger.debug('update product result:');
                 console.debug(body);
         
@@ -71,7 +69,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/manage-products', (request, response, next) => {
-            return this.httpClient.Get('api/products', (body) => {
+            return serviceDirectory.ProductsServiceClient.Get('api/products', (body) => {
                 let products = body.data.map(b => Product.Parse(b))
                 this.Logger.info(`Loaded ${products.length} product(s)`);
         
