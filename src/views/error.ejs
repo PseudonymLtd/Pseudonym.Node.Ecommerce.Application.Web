@@ -1,6 +1,6 @@
 <%- include('includes/header.ejs') %>
 
 <span><i>Uri requested: <%= requestedUri %></i></span>
-<textarea class="bs-callout bs-callout-warning errorInfo" readonly><%= error %></textarea>
+<textarea class="bs-callout bs-callout-warning errorInfo" readonly><%= JSON.stringify(error, null, 4) %></textarea>
         
 <%- include('includes/footer.ejs') %>

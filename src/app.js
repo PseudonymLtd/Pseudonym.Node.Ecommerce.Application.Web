@@ -44,24 +44,24 @@ serviceRunner.RegisterController('/admin', new AdminController());
 serviceRunner.RegisterController('/shop', new ShopController());
 
 serviceRunner.RegisterRoute(null, (error, request, response, next) => {
-    if (error !== null && error !== undefined) {
-
-        response.status(500);
-
-        rendering.render(request, response, '500', '500 Internal Server Error', { 
-            requestedUri: request.url,
-            error: error
-        });
-    }
-    else {
-        next();
-    }
+    return handleError(error, request, response);
 });
 
 serviceRunner.RegisterRoute(null, (request, response, next) => {
-    response.status(404);
-
-    rendering.render(request, response, '404', '404 Not Found', { requestedUri: request.url });
+    return handleError(null, request, response);
 });
+
+const handleError = (error, request, response) => {
+    const errorInfo = serviceRunner.ExceptionHandler.ProcessException(error, request);
+
+    response.status(errorInfo.Code);
+
+    const technicalDetails = errorInfo.Details;
+    errorInfo.details = undefined;
+
+    return rendering.render(request, response, 'error', errorInfo.Message, { 
+        error: Framework.Service.Responder.InternalServerError(errorInfo, technicalDetails)
+    });
+}
 
 serviceRunner.Start(3000);
