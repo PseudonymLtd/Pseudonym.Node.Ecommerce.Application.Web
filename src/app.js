@@ -4,7 +4,7 @@ const ShopController = require('./controllers/shop');
 const AuthController = require('./controllers/auth');
 const rendering = require('./util/rendering');
 const Cart = require('./models/cart');
-const CartItem = require('./models/cartItem');
+const OrderItem = require('./models/orderItem');
 const Product = require('./models/product');
 
 const serviceRunner = new Framework.Service.Runner('Shop Application');
@@ -19,7 +19,7 @@ serviceRunner.RegisterCookie(
     'cart', 
     () => new Cart(), 
     (rawCart) => new Cart(rawCart.items.map(
-        i => new CartItem(
+        i => new OrderItem(
             new Product(i.product.id, i.product.name, i.product.description, i.product.price, i.product.imageUri),
             i.quantity))),
     true);

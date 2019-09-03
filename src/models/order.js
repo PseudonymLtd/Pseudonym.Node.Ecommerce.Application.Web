@@ -1,9 +1,16 @@
 module.exports = class Order
 {
-    constructor(items, vatInfo, postalService) {
+    constructor(items) {
         this.items = [...items];
-        this.vatInfo = vatInfo;
-        this.postalService = postalService;
+        this.id = null;
+    }
+
+    get Id() {
+        return this.id;
+    }
+
+    set Id(value) {
+        return this.id = parseInt(value);
     }
 
     get Items() {
@@ -18,15 +25,23 @@ module.exports = class Order
         return this.SubTotal * (this.VatInfo.Rate / 100);
     }
 
-    get PostalService() {
-        return this.postalService;
-    }
-
     get Total() {
         return this.SubTotal + this.VAT + this.PostalService.Price;
     }
 
+    get PostalService() {
+        return this.postalService;
+    }
+
+    set PostalService(value) {
+        return this.postalService = value;
+    }
+
     get VatInfo() {
         return this.vatInfo;
+    }
+
+    set VatInfo(value) {
+        return this.vatInfo = value;
     }
 }

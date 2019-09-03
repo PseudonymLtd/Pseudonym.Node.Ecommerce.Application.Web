@@ -1,4 +1,4 @@
-module.exports = class CartItem
+module.exports = class OrderItem
 {
     constructor(product, quantity) {
         this.product = product;

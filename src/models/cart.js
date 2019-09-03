@@ -1,4 +1,4 @@
-const CartItem = require('../models/cartItem');
+const OrderItem = require('./orderItem');
 
 module.exports = class Cart
 {
@@ -31,29 +31,29 @@ module.exports = class Cart
     }
 
     AddItem(product, quantity) {
-        const existingCartItem = this.FindItem(product.Id);
+        const existingOrderItem = this.FindItem(product.Id);
         let qty = quantity;
 
-        if (existingCartItem) {
-          existingCartItem.Quantity += qty;
-          qty = existingCartItem.Quantity;
+        if (existingOrderItem) {
+          existingOrderItem.Quantity += qty;
+          qty = existingOrderItem.Quantity;
         }
         else {
-            this.items.push(new CartItem(product, qty));
+            this.items.push(new OrderItem(product, qty));
         }
     }
 
     RemoveItem(productId, quantity) {
-        const existingCartItem = this.FindItem(productId);
-        if (existingCartItem) {
+        const existingOrderItem = this.FindItem(productId);
+        if (existingOrderItem) {
             if (quantity) {
-                existingCartItem.Quantity -= quantity;
-                if (existingCartItem.Quantity <= 0) {
-                    this.items.splice(this.items.indexOf(existingCartItem), 1);
+                existingOrderItem.Quantity -= quantity;
+                if (existingOrderItem.Quantity <= 0) {
+                    this.items.splice(this.items.indexOf(existingOrderItem), 1);
                 }
             }
             else {
-                this.items.splice(this.items.indexOf(existingCartItem), 1);
+                this.items.splice(this.items.indexOf(existingOrderItem), 1);
             }
         }
     }
