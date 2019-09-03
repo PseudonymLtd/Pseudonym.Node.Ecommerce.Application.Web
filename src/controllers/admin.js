@@ -28,7 +28,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
                 console.debug(body);
         
                 //Check for item in cart
-                const cart = request.app.get('cart');
+                const cart = request.cart;
                 cart.RemoveItem(request.params.id)
         
                 return response.redirect('/admin/manage-products');
@@ -53,7 +53,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
                 console.debug(body);
         
                 //Check for item in cart
-                const cart = request.app.get('cart');
+                const cart = request.cart;
                 const existingItem = cart.FindItem(body.data.id);
                 if (existingItem) {
                     existingItem.Product.Price = body.data.price;

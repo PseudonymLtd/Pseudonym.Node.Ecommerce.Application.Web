@@ -1,14 +1,16 @@
 const Framework = require('library.ecommerce.framework');
 const AdminController = require('./controllers/admin');
 const ShopController = require('./controllers/shop');
+const AuthController = require('./controllers/auth');
 const rendering = require('./util/rendering');
 const Cart = require('./models/cart');
+const CartItem = require('./models/cartItem');
+const Product = require('./models/product');
 
 const serviceRunner = new Framework.Service.Runner('Shop Application');
 
 serviceRunner.UseEjs();
 
-serviceRunner.Service.set('cart', new Cart());
 serviceRunner.Service.set('selected-postal-service', -1);
 serviceRunner.Service.set('postal-services', [
     {
@@ -31,18 +33,29 @@ serviceRunner.Service.set('postal-services', [
     }
   ]);
 
-serviceRunner.Service.get('/', (request, response, next) =>
-{
-    return response.redirect('/shop');
-});
+//Redirects
+serviceRunner.Service.get('/', (request, response, next) => response.redirect('/shop'));
 
+//Cookies
+serviceRunner.RegisterCookie(
+    'cart', 
+    () => new Cart(), 
+    (rawCart) => new Cart(rawCart.items.map(
+        i => new CartItem(
+            new Product(i.product.id, i.product.name, i.product.description, i.product.price, i.product.imageUri),
+            i.quantity))));
+
+//Statics
 serviceRunner.RegisterStatic('/', 'public');
 serviceRunner.RegisterStatic('/', '../node_modules/bootstrap/dist');
 serviceRunner.RegisterStatic('/js', '../node_modules/jquery/dist');
 
+//Controllers
+serviceRunner.RegisterController('/auth', new AuthController());
 serviceRunner.RegisterController('/admin', new AdminController());
 serviceRunner.RegisterController('/shop', new ShopController());
 
+//Routes
 serviceRunner.RegisterRoute(null, (error, request, response, next) => {
     return handleError(error, request, response);
 });

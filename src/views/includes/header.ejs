@@ -28,15 +28,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/shop/products">Products</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/admin/manage-products">Manage Products</a>
-                        <a class="dropdown-item" href="/admin/add-product">Add Product</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
-                    </div>
-                </li>
+
+                <% if (principal.IsAnonymous) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Login</a>
+                    </li>
+                <% } %>
+                <% if (principal.HasRole('Administrator')) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/admin/manage-products">Manage Products</a>
+                            <a class="dropdown-item" href="/admin/add-product">Add Product</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                <% } %>
             </ul>
             <li class="nav-item navbar-nav" style="display: inline-flex">
                 <a class="nav-link cartLogo" href="/shop/cart">Cart (£<%= parseMoney(cart.SubTotal) %>)</a> 

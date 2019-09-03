@@ -1,0 +1,30 @@
+<%- include('../includes/header.ejs') %>
+
+<form class="needs-validation" action="/auth/register" method="POST">
+    <div class="form-group">
+        <label for="emailInput">Email Address</label>
+        <input class="form-control" id="emailInput" type="email" name="email" placeholder="example@shop.co.uk" required />
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="password1Input">Password</label>
+        <input class="form-control" id="password1Input" type="password" name="password" aria-describedby="passwordHelp" required />
+        <small id="passwordHelp" class="form-text text-muted">
+            <strong>Password Policy:</strong>
+            <p>Password must be at least 8 characters long and contain all of the following:</p>
+            <ul>
+                <li>An uppercase letter</li>
+                <li>A lowercase letter</li>
+                <li>A number</li>
+                <li>A special character</li>
+            </ul>
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="password2Input">Repeat Password</label>
+        <input class="form-control" id="password2Input" type="password" name="password" required />
+    </div>
+    <button type="submit" class="btn btn-warning">Login</button>
+</form>
+        
+<%- include('../includes/footer.ejs') %>

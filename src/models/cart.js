@@ -2,8 +2,8 @@ const CartItem = require('../models/cartItem');
 
 module.exports = class Cart
 {
-    constructor() {
-        this.items = [];
+    constructor(items) {
+        this.items = items === undefined ? [] : items;
     }
 
     get Items() {

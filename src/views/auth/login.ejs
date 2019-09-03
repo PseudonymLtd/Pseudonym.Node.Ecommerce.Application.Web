@@ -1,0 +1,16 @@
+<%- include('../includes/header.ejs') %>
+
+<form class="needs-validation" action="/auth/login" method="POST">
+    <div class="form-group">
+        <label for="emailInput">Email Address</label>
+        <input class="form-control" id="emailInput" type="email" name="email" placeholder="example@shop.co.uk" required />
+    </div>
+    <div class="form-group">
+        <label for="passwordInput">Name</label>
+        <input class="form-control" id="passwordInput" type="password" name="password" aria-describedby="passwordHelp" required />
+    </div>
+    <button type="submit" class="btn btn-warning">Login</button>
+    <a href="/auth/register" class="btn btn-secondary">Register</a>
+</form>
+        
+<%- include('../includes/footer.ejs') %>

@@ -48,7 +48,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         this.Get('/product/:id', (request, response, next) => {
             return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
 
-                const cart = request.app.get('cart');
+                const cart = request.cart;
                 const existingCartItem = cart.FindItem(request.params.id);
                 const product = Product.Parse(body.data);
 
@@ -66,7 +66,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
         this.Get('/cart', (request, response, next) => {
 
-            const cart = request.app.get('cart');
+            const cart = request.cart;
 
             if (cart.IsEmpty) {
                 return rendering.render(request, response, 'shop/cart', `Cart`, {
@@ -91,7 +91,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Get('/cart/product/:id', (request, response, next) => {
-            const cart = request.app.get('cart');
+            const cart = request.cart;
             cart.RemoveItem(request.params.id);
 
             return rendering.render(request, response, 'shop/cart', `Cart`);
@@ -101,7 +101,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
             let qty = parseInt(request.body.quantity);
             const product = Product.Parse(request.body);
-            const cart = request.app.get('cart');
+            const cart = request.cart;
 
             const existingCartItem = cart.FindItem(product.Id);
             if (existingCartItem) {
@@ -118,7 +118,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         this.Post('/cart/product/:id', (request, response, next) => {
 
             const qty = parseInt(request.body.quantity);
-            const cart = request.app.get('cart');
+            const cart = request.cart;
             const existingCartItem = cart.FindItem(request.params.id);
             if (existingCartItem) {
                 cart.RemoveItem(request.params.id, existingCartItem.Quantity - qty);
@@ -128,7 +128,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Post('/checkout', (request, response, next) => {
-            const cart = request.app.get('cart');
+            const cart = request.cart;
             if (cart.IsEmpty) {
                 response.redirect('/');
             }
@@ -146,18 +146,17 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Post('/pay', (request, response, next) => {
-            const cart = request.app.get('cart');
-            if (cart.IsEmpty) {
+            if (request.cart.IsEmpty) {
                 response.redirect('/');
             }
             else {
                 const postalServices = request.app.get('postal-services');
-                const order = new Order(cart.Items);
+                const order = new Order(request.cart.Items);
                 const postalServiceId = parseInt(request.body.postalServiceId);
                 order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
 
                 return serviceDirectory.OrdersServiceClient.Put('api/order', order, (body) => {
-                    cart.Reset();
+                    request.cart.Reset();
 
                     rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
                         order: order
@@ -167,7 +166,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         const syncCartItems = (request, products) => {
-            const cart = request.app.get('cart');
+            const cart = request.cart;
 
             for (let cartItem of cart.Items) {
                 const product = products.find(p => p.id === cartItem.Product.Id);
