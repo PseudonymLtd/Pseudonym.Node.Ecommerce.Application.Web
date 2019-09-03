@@ -5,7 +5,7 @@
     'use strict';
 
     const postalServices = JSON.parse($("<textarea/>").html('<%= JSON.stringify(postalServices) %>').text());
-    const previousPostalService = '<%= preferredPostalService %>';
+    const previousPostalService = '<%= preferences.postalServiceId %>';
 
     let selectedPostalServiceId = parseInt(previousPostalService);
 
@@ -86,7 +86,7 @@
             <hr class="my-2">
             <div id="postalDropdown" class="dropdown">
                 <a id="postalDropDownTitle" class="btn btn-warning dropdown-toggle" style="width: 377px;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <% if (postalServices.map(ps => ps.Id).includes(preferredPostalService)) { const preferredService = postalServices.find(p => p.Id === preferredPostalService); %>
+                    <% if (postalServices.map(ps => ps.Id).includes(preferences.postalServiceId)) { const preferredService = postalServices.find(p => p.Id === preferences.postalServiceId); %>
                         <%= preferredService.Name %> - <%= preferredService.Window %> (£<%= preferredService.Price %>)
                     <% } else { %>
                         Select a Postal Service
@@ -94,7 +94,7 @@
                 </a>
                 <div id="postalDropdownItems" class="dropdown-menu" aria-labelledby="postalDropdown">
                     <% for (let service of postalServices) { %>
-                        <option id="postalDropdownItems-<%= service.Id %>" class="dropdown-item <%= preferredPostalService === service.Id ? 'active' : '' %>"><%= service.Name %> - <%= service.Window %> (£<%= service.Price %>)</option>
+                        <option id="postalDropdownItems-<%= service.Id %>" class="dropdown-item <%= preferences.postalServiceId === service.Id ? 'active' : '' %>"><%= service.Name %> - <%= service.Window %> (£<%= service.Price %>)</option>
                     <% } %>
                 </div>
             </div>
@@ -107,7 +107,7 @@
             <b>£<%= parseMoney(cart.SubTotal) %></b>
             <span class="text-muted" style="font-size: small;">
                 <span id="postalCost">
-                    <% if (postalServices.map(ps => ps.Id).includes(preferredPostalService)) { const preferredService = postalServices.find(p => p.Id === preferredPostalService); %>
+                    <% if (postalServices.map(ps => ps.Id).includes(preferences.postalServiceId)) { const preferredService = postalServices.find(p => p.Id === preferences.postalServiceId); %>
                         + £<%= preferredService.Price %>
                     <% } else { %>
                         + £0.00
@@ -116,8 +116,8 @@
             </span>
         </p>
         <form method="POST" action="/shop/checkout" style="float: right;">
-            <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= postalServices.map(ps => ps.Id).includes(preferredPostalService) ? preferredPostalService : 0 %>">
-            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg" <%= postalServices.map(ps => ps.Id).includes(preferredPostalService) ? '' : 'disabled' %>>Checkout</button>
+            <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= postalServices.map(ps => ps.Id).includes(preferences.postalServiceId) ? preferences.postalServiceId : 0 %>">
+            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg" <%= postalServices.map(ps => ps.Id).includes(preferences.postalServiceId) ? '' : 'disabled' %>>Checkout</button>
             <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
         </form>
     </footer> 

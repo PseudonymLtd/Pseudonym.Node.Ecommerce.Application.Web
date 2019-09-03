@@ -11,7 +11,6 @@ const serviceRunner = new Framework.Service.Runner('Shop Application');
 
 serviceRunner.UseEjs();
 
-serviceRunner.Service.set('selected-postal-service', -1);
 serviceRunner.Service.set('postal-services', [
     {
         Id: 1,
@@ -43,7 +42,10 @@ serviceRunner.RegisterCookie(
     (rawCart) => new Cart(rawCart.items.map(
         i => new CartItem(
             new Product(i.product.id, i.product.name, i.product.description, i.product.price, i.product.imageUri),
-            i.quantity))));
+            i.quantity))),
+    true);
+
+serviceRunner.RegisterCookie('preferences', () => Object.create({ postalServiceId: -1 }), (p) => p, false);
 
 //Statics
 serviceRunner.RegisterStatic('/', 'public');

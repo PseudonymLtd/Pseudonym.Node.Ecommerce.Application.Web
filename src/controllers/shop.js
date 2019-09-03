@@ -69,9 +69,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
             const cart = request.cart;
 
             if (cart.IsEmpty) {
-                return rendering.render(request, response, 'shop/cart', `Cart`, {
-                    preferredPostalService: request.app.get('selected-postal-service')
-                });
+                return rendering.render(request, response, 'shop/cart', 'Cart');
             }
 
             return serviceDirectory.ProductsServiceClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
@@ -84,9 +82,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     console.warn(body.additionalInformation);
                 }
 
-                return rendering.render(request, response, 'shop/cart', `Cart`, {
-                    preferredPostalService: request.app.get('selected-postal-service')
-                });
+                return rendering.render(request, response, 'shop/cart', 'Cart');
             }, next);
         });
 
@@ -128,16 +124,16 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Post('/checkout', (request, response, next) => {
-            const cart = request.cart;
-            if (cart.IsEmpty) {
+            if (request.cart.IsEmpty) {
                 response.redirect('/');
             }
             else {
                 const postalServices = request.app.get('postal-services');
-                const order = new Order(cart.Items);
+                const order = new Order(request.cart.Items);
                 const postalServiceId = parseInt(request.body.postalServiceId);
                 order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
-                request.app.set('selected-postal-service', postalServiceId);
+                
+                request.preferences.postalServiceId = postalServiceId;
 
                 rendering.render(request, response, 'shop/checkout', 'Checkout', {
                     order: order
