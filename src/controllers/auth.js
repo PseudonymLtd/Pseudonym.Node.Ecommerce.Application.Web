@@ -15,7 +15,8 @@ module.exports = class AuthController extends Framework.Service.Controller {
 
         this.Post('/login', (request, response, next) => {
 
-            
+            console.log(request.app.authenticator);
+            request.app.authenticator.Login(request, request.body.email, request.body.password);
 
             return response.redirect('/');
         });
