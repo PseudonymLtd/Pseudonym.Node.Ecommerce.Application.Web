@@ -1,9 +1,9 @@
-const vatPercentage = 20.00;
-
 module.exports = class Order
 {
-    constructor(items) {
+    constructor(items, vatInfo, postalService) {
         this.items = [...items];
+        this.vatInfo = vatInfo;
+        this.postalService = postalService;
     }
 
     get Items() {
@@ -15,22 +15,18 @@ module.exports = class Order
     }
 
     get VAT() {
-        return this.SubTotal * (vatPercentage / 100);
+        return this.SubTotal * (this.VatInfo.Rate / 100);
     }
 
     get PostalService() {
         return this.postalService;
     }
 
-    set PostalService(value) {
-        return this.postalService = value;
-    }
-
     get Total() {
-        return this.SubTotal + this.VAT + this.postalService.Price;
+        return this.SubTotal + this.VAT + this.PostalService.Price;
     }
 
-    get VatPercentage() {
-        return vatPercentage;
+    get VatInfo() {
+        return this.vatInfo;
     }
 }

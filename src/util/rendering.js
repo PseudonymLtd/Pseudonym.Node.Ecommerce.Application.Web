@@ -8,7 +8,6 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.requestedUri = request.Uri;
     dataObj.cart = request.cart;
     dataObj.preferences = request.preferences;
-    dataObj.postalServices = request.app.get('postal-services');
     dataObj.parseMoney = parseMoney;
     dataObj.principal = request.principal;
 

@@ -65,14 +65,13 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Get('/cart', (request, response, next) => {
-
-            const cart = request.cart;
-
-            if (cart.IsEmpty) {
-                return rendering.render(request, response, 'shop/cart', 'Cart');
+            if (request.cart.IsEmpty) {
+                return rendering.render(request, response, 'shop/cart', 'Cart', {
+                    postalServices: []
+                });
             }
 
-            return serviceDirectory.ProductsServiceClient.Post('api/products', cart.Items.map(ci => ci.Product.Id), (body) => {
+            return serviceDirectory.ProductsServiceClient.Post('api/products', request.cart.Items.map(ci => ci.Product.Id), (body) => {
 
                 //update cart objects
                 syncCartItems(request, body.data);
@@ -82,7 +81,13 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     console.warn(body.additionalInformation);
                 }
 
-                return rendering.render(request, response, 'shop/cart', 'Cart');
+                return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+                    return rendering.render(request, response, 'shop/cart', 'Cart', {
+                        postalServices: body.data
+                    });
+                }, next);
+
+                
             }, next);
         });
 
@@ -90,22 +95,25 @@ module.exports = class ShopController extends Framework.Service.Controller {
             const cart = request.cart;
             cart.RemoveItem(request.params.id);
 
-            return rendering.render(request, response, 'shop/cart', `Cart`);
+            return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+                return rendering.render(request, response, 'shop/cart', 'Cart', {
+                    postalServices: body.data
+                });
+            }, next);
         });
 
         this.Post('/cart', (request, response, next) => {
 
             let qty = parseInt(request.body.quantity);
             const product = Product.Parse(request.body);
-            const cart = request.cart;
 
-            const existingCartItem = cart.FindItem(product.Id);
+            const existingCartItem = request.cart.FindItem(product.Id);
             if (existingCartItem) {
                 existingCartItem.Quantity += qty;
                 qty = existingCartItem.Quantity;
             }
             else {
-                cart.AddItem(product, qty);
+                request.cart.AddItem(product, qty);
             }
 
             return response.redirect(`/shop/product/${product.Id}`);
@@ -114,13 +122,16 @@ module.exports = class ShopController extends Framework.Service.Controller {
         this.Post('/cart/product/:id', (request, response, next) => {
 
             const qty = parseInt(request.body.quantity);
-            const cart = request.cart;
-            const existingCartItem = cart.FindItem(request.params.id);
+            const existingCartItem = request.cart.FindItem(request.params.id);
             if (existingCartItem) {
-                cart.RemoveItem(request.params.id, existingCartItem.Quantity - qty);
+                request.cart.RemoveItem(request.params.id, existingCartItem.Quantity - qty);
             }
 
-            return rendering.render(request, response, 'shop/cart', `Cart`);
+            return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+                return rendering.render(request, response, 'shop/cart', 'Cart', {
+                    postalServices: body.data
+                });
+            }, next);
         });
 
         this.Post('/checkout', (request, response, next) => {
@@ -128,16 +139,24 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 response.redirect('/');
             }
             else {
-                const postalServices = request.app.get('postal-services');
-                const order = new Order(request.cart.Items);
-                const postalServiceId = parseInt(request.body.postalServiceId);
-                order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
-                
-                request.preferences.postalServiceId = postalServiceId;
 
-                rendering.render(request, response, 'shop/checkout', 'Checkout', {
-                    order: order
-                });
+                const postalServiceId = parseInt(request.body.postalServiceId);
+                request.preferences.postalServiceId = postalServiceId;
+                return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+
+                    const postalService = body.data.find(ps => ps.Id === postalServiceId);
+
+                    return serviceDirectory.OrdersServiceClient.Get('api/vat', (body) => {
+
+                        const order = new Order(request.cart.Items, body.data[0], postalService); //TODO: update array to use locales
+    
+                        rendering.render(request, response, 'shop/checkout', 'Checkout', {
+                            order: order
+                        });
+                      }, next);
+
+                }, next);
+                
             }
         });
 
@@ -146,17 +165,21 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 response.redirect('/');
             }
             else {
-                const postalServices = request.app.get('postal-services');
-                const order = new Order(request.cart.Items);
-                const postalServiceId = parseInt(request.body.postalServiceId);
-                order.PostalService = postalServices.find(ps => ps.Id === postalServiceId);
+                return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
 
-                return serviceDirectory.OrdersServiceClient.Put('api/order', order, (body) => {
-                    request.cart.Reset();
+                    const postalService = body.data.find(ps => ps.Id === parseInt(request.body.postalServiceId));
 
-                    rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
-                        order: order
-                    });
+                    return serviceDirectory.OrdersServiceClient.Get('api/vat', (body) => {
+
+                        const order = new Order(request.cart.Items, body.data[0], postalService); //TODO: update array to use locales
+    
+                        request.cart.Reset();
+
+                        rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
+                            order: order
+                        });
+                      }, next);
+
                 }, next);
             }
         });

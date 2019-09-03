@@ -11,27 +11,6 @@ const serviceRunner = new Framework.Service.Runner('Shop Application');
 
 serviceRunner.UseEjs();
 
-serviceRunner.Service.set('postal-services', [
-    {
-        Id: 1,
-        Name: 'Standard Delivery',
-        Window: '3 to 5 Working Days',
-        Price: 3.49
-    },
-    {
-        Id: 2,
-        Name: 'Express Delivery',
-        Window: '1 to 2 Working Days',
-        Price: 4.99
-    },
-    {
-        Id: 3,
-        Name: 'Special Delivery',
-        Window: '1 Working Day',
-        Price: 7.24
-    }
-  ]);
-
 //Redirects
 serviceRunner.Service.get('/', (request, response, next) => response.redirect('/shop'));
 
@@ -57,7 +36,6 @@ serviceRunner.RegisterController('/auth', new AuthController());
 serviceRunner.RegisterController('/admin', new AdminController());
 serviceRunner.RegisterController('/shop', new ShopController());
 
-//Routes
 serviceRunner.RegisterRoute(null, (error, request, response, next) => {
     return handleError(error, request, response);
 });

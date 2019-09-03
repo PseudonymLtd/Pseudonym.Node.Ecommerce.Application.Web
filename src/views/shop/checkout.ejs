@@ -20,7 +20,7 @@
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center">
-                    <span>VAT @ <%= order.VatPercentage.toFixed(2) %>%</span>
+                    <span>VAT (<%= order.VatInfo.Region %>) @ <%= order.VatInfo.Rate.toFixed(2) %>%</span>
                 </div>
                 <div class="col align-self-center" style="text-align: right;">
                     <span>£<%= parseMoney(order.VAT) %></span>
