@@ -10,7 +10,7 @@ module.exports = class AuthController extends Framework.Service.Controller {
         });
 
         this.Get('/logout', (request, response, next) => {
-            request.app.authenticator.Logout(request, err => {
+            return request.app.authenticator.Logout(request, err => {
                 if (err) 
                 {
                     return next(err);
@@ -24,7 +24,10 @@ module.exports = class AuthController extends Framework.Service.Controller {
         });
 
         this.Post('/login', (request, response, next) => {
-            request.app.authenticator.Login(request, request.body.email, request.body.password);
+
+            const encryptedPassword = request.body.password;
+
+            request.app.authenticator.Login(request, new Framework.Models.User(77, 'Frank', 'Bobson', request.body.email), ['Administrator']);
 
             return response.redirect('/');
         });
