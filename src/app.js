@@ -50,10 +50,32 @@ const handleError = (error, request, response) => {
     response.status(errorInfo.Code);
 
     const technicalDetails = errorInfo.Details;
+    technicalDetails.requestedUri = request.Uri;
     errorInfo.details = undefined;
 
+    let errorWrap = null;
+    console.log(errorInfo.Code);
+
+    switch(errorInfo.Code)  {
+        case 400:
+            errorWrap = Framework.Service.Responder.BadRequest(errorInfo, technicalDetails);
+            break;
+        case 401:
+            errorWrap = Framework.Service.Responder.Unauthorized(errorInfo, technicalDetails);
+            break;
+        case 403:
+            errorWrap = Framework.Service.Responder.Forbidden(errorInfo, technicalDetails);
+            break;
+        case 404:
+            errorWrap = Framework.Service.Responder.NotFound(undefined, { requestedUri: request.Uri });
+            break;
+        default:
+            errorWrap = Framework.Service.Responder.InternalServerError(errorInfo, technicalDetails);
+            break;
+    }
+
     return rendering.render(request, response, 'error', errorInfo.Message, { 
-        error: Framework.Service.Responder.InternalServerError(errorInfo, technicalDetails)
+        error: errorWrap
     });
 }
 

@@ -5,7 +5,7 @@ const Product = require('../models/product');
 
 module.exports = class AdminController extends Framework.Service.Controller {
     constructor() {
-        super('Admin Controller');
+        super('Admin Controller', ['Administrator']);
 
         this.Get('/add-product', (request, response, next) => {
             return rendering.render(request, response, 'admin/add-product', 'Add Product');
