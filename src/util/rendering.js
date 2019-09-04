@@ -11,8 +11,6 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.parseMoney = parseMoney;
     dataObj.principal = request.session.principal;
 
-    console.log(request.session.principal);
-
     response.render(path, dataObj);
     request.app.logger.debug('Page Served');
 };
