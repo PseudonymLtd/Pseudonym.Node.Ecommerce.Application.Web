@@ -1,4 +1,4 @@
-const Framework = require('library.ecommerce.framework');
+const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
 
 module.exports = class AuthController extends Framework.Service.Controller {

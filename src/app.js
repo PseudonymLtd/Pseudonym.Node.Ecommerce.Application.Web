@@ -1,4 +1,4 @@
-const Framework = require('library.ecommerce.framework');
+const Framework = require('pseudonym.node.ecommerce.library.framework');
 const AdminController = require('./controllers/admin');
 const ShopController = require('./controllers/shop');
 const AuthController = require('./controllers/auth');

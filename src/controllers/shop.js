@@ -1,4 +1,4 @@
-const Framework = require('library.ecommerce.framework');
+const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');

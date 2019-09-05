@@ -1,4 +1,4 @@
-const Framework = require('library.ecommerce.framework');
+const Framework = require('pseudonym.node.ecommerce.library.framework');
 const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
 
 module.exports = class Product extends Framework.Models.DataModel
