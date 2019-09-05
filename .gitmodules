@@ -4,3 +4,6 @@
 [submodule "Pseudonym.Node.Ecommerce.Service.Orders"]
 	path = Pseudonym.Node.Ecommerce.Service.Orders
 	url = https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Service.Orders.git
+[submodule "Pseudonym.Node.Ecommerce.Service.Shipping"]
+	path = Pseudonym.Node.Ecommerce.Service.Shipping
+	url = https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Service.Shipping.git
