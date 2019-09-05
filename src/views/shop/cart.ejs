@@ -20,9 +20,9 @@
 
                 selectedPostalServiceId = parseInt(source.id.split('-')[1]);
 
-                const service = postalServices.find(p => p.Id === selectedPostalServiceId);
+                const service = postalServices.find(p => p.id === selectedPostalServiceId);
 
-                $('#postalCost')[0].innerText = service.Price.toFixed(2);
+                $('#postalCost')[0].innerText = service.price.toFixed(2);
                 $('#postalDropDownTitle')[0].innerText = source.innerText;
                 $('#checkoutBtn')[0].disabled = false;
                 $('#postalServiceId')[0].value = selectedPostalServiceId;

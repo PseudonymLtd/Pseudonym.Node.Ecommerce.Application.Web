@@ -2,6 +2,7 @@ const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');
+const Shipping = require('../models/shipping');
 const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
 
@@ -82,9 +83,9 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     console.warn(body.additionalInformation);
                 }
 
-                return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+                return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
                     return rendering.render(request, response, 'shop/cart', 'Cart', {
-                        postalServices: body.data
+                        postalServices: body.data.map(s => Shipping.Parse(s))
                     });
                 }, next);
 
@@ -96,9 +97,9 @@ module.exports = class ShopController extends Framework.Service.Controller {
             const cart = request.cart;
             cart.RemoveItem(request.params.id);
 
-            return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
-                    postalServices: body.data
+                    postalServices: body.data.map(s => Shipping.Parse(s))
                 });
             }, next);
         });
@@ -128,9 +129,9 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 request.cart.RemoveItem(request.params.id, existingOrderItem.Quantity - qty);
             }
 
-            return serviceDirectory.OrdersServiceClient.Get('api/shipping', (body) => {
+            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
-                    postalServices: body.data
+                    postalServices: body.data.map(s => Shipping.Parse(s))
                 });
             }, next);
         });
@@ -157,14 +158,11 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     order.Id = body.data.id;
                     order.VatInfo = body.data.vatInfo;
                     order.PostalService = body.data.postalService;
-                    console.log(order);
-                    console.log(order.Items);
 
                     rendering.render(request, response, 'shop/checkout', 'Checkout', {
                         order: order
                     });
                 }, next);
-                
             }
         });
 

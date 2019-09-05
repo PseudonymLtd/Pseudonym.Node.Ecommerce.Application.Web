@@ -15,18 +15,12 @@ module.exports = class AdminController extends Framework.Service.Controller {
             var newProduct = Product.Parse(request.body);
         
             return serviceDirectory.ProductsServiceClient.Put('api/product', newProduct, (body) => {
-                this.Logger.debug('add product result:');
-                console.debug(body);
-        
                 return response.redirect(`/shop/product/${body.data.id}`);
             }, next);
         });
 
         this.Get('/remove-product/:id', (request, response, next) => {
             return serviceDirectory.ProductsServiceClient.Delete(`api/product/${request.params.id}`, (body) => {
-                this.Logger.debug('remove product result:');
-                console.debug(body);
-        
                 //Check for item in cart
                 const cart = request.cart;
                 cart.RemoveItem(request.params.id)
@@ -49,9 +43,6 @@ module.exports = class AdminController extends Framework.Service.Controller {
             var updatedProduct = Product.Parse(request.body);
         
             return serviceDirectory.ProductsServiceClient.Put(`api/product/${updatedProduct.id}`, updatedProduct, (body) => {
-                this.Logger.debug('update product result:');
-                console.debug(body);
-        
                 //Check for item in cart
                 const cart = request.cart;
                 const existingItem = cart.FindItem(body.data.id);
