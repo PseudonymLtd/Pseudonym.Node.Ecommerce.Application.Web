@@ -1,2 +1,2 @@
-# Application.Ecommerce.Shop
-A frontend application containing a very simple shop that communicates with a micro-service architecture.
+# Pseudonym.Node.Ecommerce.Application.Web
+A frontend application containing a simple shop that communicates with a micro-service architecture.
