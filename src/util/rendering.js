@@ -1,3 +1,5 @@
+const money = require('./money');
+
 const render = (request, response, path, title, dataObj) =>
 {
     if (dataObj === undefined || dataObj === null) {
@@ -8,15 +10,11 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.requestedUri = request.Uri;
     dataObj.cart = request.cart;
     dataObj.preferences = request.preferences;
-    dataObj.parseMoney = parseMoney;
+    dataObj.parseMoney = money.Parse;
     dataObj.principal = request.session.principal;
 
     response.render(path, dataObj);
     request.app.logger.debug('Page Served');
 };
-
-const parseMoney = (int) => {
-    return int.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
 module.exports.render = render;

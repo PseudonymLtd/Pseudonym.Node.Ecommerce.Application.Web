@@ -1,0 +1,45 @@
+<%- include('../includes/header.ejs') %>
+
+<script type="text/javascript">
+    (function() {
+        'use strict';
+    
+        const renderableContent = JSON.parse($("<textarea/>").html('<%= JSON.stringify(entities.map(e => e.Render())) %>').text());
+    
+        window.addEventListener('load', function() {
+            for (let renderContent of renderableContent) {
+                $(`#render-container-${renderContent.id}`)[0].innerHTML = renderContent.html;
+            }
+        });
+    })();
+</script>
+
+<p class="lead">Below are all the products currently listed on the website.</p>
+<hr class="my-4">
+<div class="cart">
+    <div class="bs-callout bs-callout-warning">
+        <h1><%= entityName_Plural %></h1>
+        <% for (let entity of entities) { %>
+            <hr class="my-2">
+            <div class="container-fluid" style="padding: 0">
+                <div class="row align-items-center justify-content-between">
+                    <div id="render-container-<%= entity.Id %>" class="col-lg align-self-center">
+                        <!-- Dynamic Content Here -->
+                    </div>
+                    <div class="col-sm align-self-center" style="text-align: right;">
+                        <a class="btn btn-warning btn-sm" href="/admin/update-<%= entity.EntityName.toLowerCase() %>/<%= entity.Id %>?sender=Management" role="button">Edit</a>
+                        <a class="btn btn-secondary btn-sm" href="/admin/remove-<%= entity.EntityName.toLowerCase() %>/<%= entity.Id %>" role="button">Delete</a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+<footer class="bs-callout bs-callout-warning cartPrice">
+    <div style="float: right;">
+        <a class="btn btn-warning btn-lg" href="/admin/add-<%= entityName.toLowerCase() %>" role="button">Add <%= entityName %></a>
+        <a class="btn btn-secondary btn-lg" href="/shop" role="button">Back</a>
+    </div>
+</footer> 
+
+<%- include('../includes/footer.ejs') %>

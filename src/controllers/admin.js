@@ -2,6 +2,8 @@ const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
 const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');
+const Shipping = require('../models/shipping');
+const Order = require('../models/order');
 
 module.exports = class AdminController extends Framework.Service.Controller {
     constructor() {
@@ -61,10 +63,43 @@ module.exports = class AdminController extends Framework.Service.Controller {
 
         this.Get('/manage-products', (request, response, next) => {
             return serviceDirectory.ProductsServiceClient.Get('api/products', (body) => {
-                let products = body.data.map(b => Product.Parse(b))
+                const products = body.data.map(b => Product.Parse(b));
                 this.Logger.info(`Loaded ${products.length} product(s)`);
         
-                rendering.render(request, response, 'admin/manage-products', 'Manage Products', { products: products } );
+                rendering.render(request, response, 'admin/manage-entities', 'Manage Products', 
+                { 
+                    entities: products,
+                    entityName: products.length > 0 ? products[0].EntityName : 'Product',
+                    entityName_Plural: products.length > 0 ? products[0].EntityName : 'Products'
+                });
+              }, next);
+        });
+
+        this.Get('/manage-shipping', (request, response, next) => {
+            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
+                const shippingServices = body.data.map(s => Shipping.Parse(s));
+                this.Logger.info(`Loaded ${shippingServices.length} Shipping Services`);
+        
+                rendering.render(request, response, 'admin/manage-entities', 'Manage Shipping', 
+                { 
+                    entities: shippingServices,
+                    entityName: shippingServices.length > 0 ? shippingServices[0].EntityName : 'Shipping',
+                    entityName_Plural: shippingServices.length > 0 ? shippingServices[0].EntityName : 'Shipping'
+                });
+              }, next);
+        });
+
+        this.Get('/manage-orders', (request, response, next) => {
+            return serviceDirectory.OrdersServiceClient.Get('api/orders', (body) => {
+                const orders = body.data.map(o => Order.Parse(o));
+                this.Logger.info(`Loaded ${orders.length} orders`);
+        
+                rendering.render(request, response, 'admin/manage-entities', 'Manage Orders', 
+                { 
+                    entities: orders,
+                    entityName: orders.length > 0 ? orders[0].EntityName : 'Order',
+                    entityName_Plural: orders.length > 0 ? orders[0].EntityName : 'Orders'
+                });
               }, next);
         });
     }

@@ -1,10 +1,11 @@
-const Framework = require('pseudonym.node.ecommerce.library.framework');
+const RenderableEntity = require('./renderableEntity');
 const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
+const money = require('../util/money');
 
-module.exports = class Product extends Framework.Models.DataModel
+module.exports = class Product extends RenderableEntity
 {
     constructor(id, name, description, price, imageUri) {
-        super(id);
+        super(id, 'Product', 'Products');
         this.name = name;
         this.description = description;
         this.price = parseFloat(price);
@@ -43,7 +44,23 @@ module.exports = class Product extends Framework.Models.DataModel
         return this.imageUri = value;
     }
 
+    Render() {
+        const render = super.Render();
+        render.html = 
+        (`<img src="${this.ImageUri}" class="img-fluid" alt="product image" style="width: 75px; height: 75px; margin-right: 8px; float: left;" />` +
+        `<div>` +
+            `<div>` +
+                `<span><a href="/shop/product/${this.Id}">${this.Name}</a> - £${money.Parse(this.Price)}</span>` +
+            `</div>` +
+            `<div>` +
+                `<span>${this.Description}</span>` +
+            `</div>` +
+        `</div>`).replace(/"/g, '\\"');
+        console.log(render.html);
+        return render
+    }
+
     static Parse(dataObj) {
         return new Product(dataObj.id, dataObj.name, dataObj.description, dataObj.price, dataObj.imageUri);
     }
-}
+} 
