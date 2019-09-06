@@ -3,7 +3,8 @@ const OrderItem = require('./orderItem');
 const Product = require('./product');
 const Shipping = require('./shipping');
 const money = require('../util/money');
-const TextField = require('./form/textField');
+const DropDownField = require('./form/dropdownField');
+const DropDownFieldValue = require('./form/dropdownFieldValue');
 
 const PendingState = 'Pending';
 const AbandonedState = 'Abandoned';
@@ -67,11 +68,11 @@ module.exports = class Order extends RenderableEntity
 
     get StatusStyle() {
         switch(this.Status) {
-            case 'Completed':
+            case CompletedState:
                 return 'color: green;';
-            case 'Abandoned':
+            case AbandonedState:
                 return 'color: red;';
-            case 'Cancelled':
+            case CancelledState:
                 return 'color: gray;';
             default:
                 return 'color: orange;';
@@ -126,7 +127,12 @@ module.exports = class Order extends RenderableEntity
 
     static FormMetaData() {
         return [
-            new TextField('Status', `${PendingState} | ${CompletedState} | ${AbandonedState} | ${CancelledState}`, true)
+            new DropDownField('Status', [
+                new DropDownFieldValue(PendingState, PendingState),
+                new DropDownFieldValue(CompletedState, CompletedState),
+                new DropDownFieldValue(AbandonedState, AbandonedState),
+                new DropDownFieldValue(CancelledState, CancelledState)
+            ])
         ];
     }
 

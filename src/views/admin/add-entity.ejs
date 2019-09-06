@@ -7,6 +7,22 @@
         window.addEventListener('load', function() {
             const renderableContent = JSON.parse($("<textarea/>").html('<%= JSON.stringify(form) %>').text());
             $(`#form-container`)[0].innerHTML = renderableContent;
+
+            for (let dropdownRef of $('input[type=hidden]').filter(domObj => domObj.id !== 'Id')) {
+                $(`#${dropdownRef.id}Selector`).on('hidden.bs.dropdown', function (event) {
+                    if (event.clickEvent) {
+                        for (let child of $(`#${dropdownRef.id}Items`)[0].children) {
+                            child.classList.remove('active');
+                        }
+
+                        const source = event.clickEvent.originalEvent.srcElement;
+                        source.classList.add('active');
+                        dropdownRef.value = source.value;
+
+                        $(`#${dropdownRef.id}Display`)[0].innerText = source.innerText;
+                    }
+                });
+            }
         });
     })();
 </script>

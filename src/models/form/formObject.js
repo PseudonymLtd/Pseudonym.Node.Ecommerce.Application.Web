@@ -4,7 +4,7 @@ module.exports = class FormObject
         this._name = name
         this._type = type;
         this._required = required;
-        this._initalValue = initalValue ? initalValue.toString() : undefined;
+        this._initalValue = initalValue;
         this._placeholder = placeholder;
         this._additionalAttributes = [];
     }
