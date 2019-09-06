@@ -27,10 +27,12 @@
         </div>
     </form>
     <footer>
-        <div>            
-            <a href="/admin/update-product/<%= product.Id %>?sender=ProductDetails">Edit</a> |
-            <a href="/admin/remove-product/<%= product.Id %>">Delete</a>
-        </div>
+        <% if (principal.HasRole('Administrator')) { %>
+            <div>            
+                <a href="/admin/update-product/<%= product.Id %>">Edit</a> |
+                <a href="/admin/remove-product/<%= product.Id %>">Delete</a>
+            </div>
+        <% } %>
     </footer>
 </div>
         

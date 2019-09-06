@@ -1,4 +1,8 @@
 const RenderableEntity = require('./renderableEntity');
+const money = require('../util/money');
+const NumberField = require('./form/numberField');
+const TextField = require('./form/textField');
+
 const defaultImageUri = 'https://www.stamps.com/assets/images/shipping/hidden-postage/hidden-postage-large.jpg';
 
 module.exports = class Shipping extends RenderableEntity
@@ -33,17 +37,29 @@ module.exports = class Shipping extends RenderableEntity
         (`<img src="${this.ImageUri}" class="img-fluid" alt="product image" style="width: 75px; height: 75px; margin-right: 8px; float: left;" />` +
         `<div>` +
             `<div>` +
-                `<span><a href="/shop/product/${this.Id}">${this.Name}</a> - £${this.Price.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>` +
+                `<span><a href="/shop/product/${this.Id}">${this.Name}</a> - £${money.Parse(this.Price)}</span>` +
             `</div>` +
             `<div>` +
                 `<span>${this.Window}</span>` +
             `</div>` +
         `</div>`).replace(/"/g, '\\"');
-        console.log(render.html);
         return render
     }
 
+    static FormMetaData() {
+        return [
+            new TextField('Name', 'Shipping Service Name', true),
+            new TextField('Window', 'x - y Working Days', true),
+            new NumberField('Price', '', true, (1).toFixed(2), 0.01),
+            new TextField('ImageUri', 'http://', false, defaultImageUri)
+        ];
+    }
+
     static Parse(dataObj) {
-        return new Shipping(dataObj.id, dataObj.name, dataObj.window, dataObj.price);
+        return new Shipping(
+            dataObj.Id ? dataObj.Id : dataObj.id,
+            dataObj.Name ? dataObj.Name : dataObj.name,
+            dataObj.Window ? dataObj.Window : dataObj.window,
+            dataObj.Price ? dataObj.Price : dataObj.price);
     }
 }

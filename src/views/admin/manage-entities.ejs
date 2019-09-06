@@ -4,9 +4,8 @@
     (function() {
         'use strict';
     
-        const renderableContent = JSON.parse($("<textarea/>").html('<%= JSON.stringify(entities.map(e => e.Render())) %>').text());
-    
         window.addEventListener('load', function() {
+            const renderableContent = JSON.parse($("<textarea/>").html('<%= JSON.stringify(entities.map(e => e.Render())) %>').text());
             for (let renderContent of renderableContent) {
                 $(`#render-container-${renderContent.id}`)[0].innerHTML = renderContent.html;
             }
@@ -27,7 +26,7 @@
                         <!-- Dynamic Content Here -->
                     </div>
                     <div class="col-sm align-self-center" style="text-align: right;">
-                        <a class="btn btn-warning btn-sm" href="/admin/update-<%= entity.EntityName.toLowerCase() %>/<%= entity.Id %>?sender=Management" role="button">Edit</a>
+                        <a class="btn btn-warning btn-sm" href="/admin/update-<%= entity.EntityName.toLowerCase() %>/<%= entity.Id %>" role="button">Manage</a>
                         <a class="btn btn-secondary btn-sm" href="/admin/remove-<%= entity.EntityName.toLowerCase() %>/<%= entity.Id %>" role="button">Delete</a>
                     </div>
                 </div>
@@ -37,7 +36,9 @@
 </div>
 <footer class="bs-callout bs-callout-warning cartPrice">
     <div style="float: right;">
-        <a class="btn btn-warning btn-lg" href="/admin/add-<%= entityName.toLowerCase() %>" role="button">Add <%= entityName %></a>
+        <% if (canAdd) { %>
+            <a class="btn btn-warning btn-lg" href="/admin/add-<%= entityName.toLowerCase() %>" role="button">Add <%= entityName %></a>
+        <% } %>
         <a class="btn btn-secondary btn-lg" href="/shop" role="button">Back</a>
     </div>
 </footer> 

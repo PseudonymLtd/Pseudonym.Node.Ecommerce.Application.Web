@@ -3,6 +3,7 @@ const OrderItem = require('./orderItem');
 const Product = require('./product');
 const Shipping = require('./shipping');
 const money = require('../util/money');
+const TextField = require('./form/textField');
 
 const PendingState = 'Pending';
 const AbandonedState = 'Abandoned';
@@ -121,6 +122,12 @@ module.exports = class Order extends RenderableEntity
 
         render.html = render.html.replace(/"/g, '\\"');
         return render;
+    }
+
+    static FormMetaData() {
+        return [
+            new TextField('Status', `${PendingState} | ${CompletedState} | ${AbandonedState} | ${CancelledState}`, true)
+        ];
     }
 
     static Parse(dataObj) {

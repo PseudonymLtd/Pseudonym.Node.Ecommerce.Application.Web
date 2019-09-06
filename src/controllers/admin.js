@@ -10,14 +10,22 @@ module.exports = class AdminController extends Framework.Service.Controller {
         super('Admin Controller', ['Administrator']);
 
         this.Get('/add-product', (request, response, next) => {
-            return rendering.render(request, response, 'admin/add-product', 'Add Product');
+            return rendering.renderForm(request, response, 'admin/add-entity', 'Add Product', Product.FormMetaData(), '/admin/manage-products'); 
         });
 
         this.Post('/add-product', (request, response, next) => {
-            var newProduct = Product.Parse(request.body);
-        
-            return serviceDirectory.ProductsServiceClient.Put('api/product', newProduct, (body) => {
+            return serviceDirectory.ProductsServiceClient.Post('api/product', Product.Parse(request.body), (body) => {
                 return response.redirect(`/shop/product/${body.data.id}`);
+            }, next);
+        });
+
+        this.Get('/add-shipping', (request, response, next) => {
+            return rendering.renderForm(request, response, 'admin/add-entity', 'Add Shipping Service', Shipping.FormMetaData(), '/admin/manage-shipping');
+        });
+
+        this.Post('/add-shipping', (request, response, next) => {
+            return serviceDirectory.ShippingServiceClient.Post('api/shipping', Shipping.Parse(request.body), (body) => {
+                return response.redirect('/admin/manage-shipping');
             }, next);
         });
 
@@ -31,33 +39,61 @@ module.exports = class AdminController extends Framework.Service.Controller {
             }, next);
         });
 
+        this.Get('/remove-shipping/:id', (request, response, next) => {
+            return serviceDirectory.ShippingServiceClient.Delete(`api/shipping/${request.params.id}`, (body) => {
+                //reset preferences
+                if (request.preferences.postalServiceId == request.params.id) {
+                    request.preferences.postalServiceId = -1;
+                }
+                return response.redirect('/admin/manage-shipping');
+            }, next);
+        });
+
+        this.Get('/remove-order/:id', (request, response, next) => {
+            return serviceDirectory.OrdersServiceClient.Delete(`api/order/${request.params.id}`, (body) => {
+                return response.redirect('/admin/manage-orders');
+            }, next);
+        });
+
         this.Get('/update-product/:id', (request, response, next) => {
             return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
-                rendering.render(request, response, 'admin/update-product', 'Edit Product', {
-                    product: Product.Parse(body.data),
-                    sender: request.query.sender ? request.query.sender : 'Management'
-                });
+                rendering.renderForm(request, response, 'admin/update-entity', 'Update Product', Product.FormMetaData(), '/admin/manage-products', Product.Parse(body.data));
             }, next);
         });
 
         this.Post('/update-product/:id', (request, response, next) => {
-
-            var updatedProduct = Product.Parse(request.body);
-        
-            return serviceDirectory.ProductsServiceClient.Put(`api/product/${updatedProduct.id}`, updatedProduct, (body) => {
+            return serviceDirectory.ProductsServiceClient.Put(`api/product/${request.body.Id}`, Product.Parse(request.body), (body) => {
                 //Check for item in cart
                 const cart = request.cart;
                 const existingItem = cart.FindItem(body.data.id);
                 if (existingItem) {
                     existingItem.Product.Price = body.data.price;
                 }
-        
-                if (request.query.sender && request.query.sender === 'ProductDetails') {
-                    return response.redirect(`/shop/product/${body.data.id}`);
-                }
-                else {
-                    return response.redirect('/admin/manage-products');
-                }
+                return response.redirect('/admin/manage-products');
+            }, next);
+        });
+
+        this.Get('/update-shipping/:id', (request, response, next) => {
+            return serviceDirectory.ShippingServiceClient.Get(`api/shipping/${request.params.id}`, (body) => {
+                rendering.renderForm(request, response, 'admin/update-entity', 'Update Shipping Service', Shipping.FormMetaData(), '/admin/manage-shipping', Shipping.Parse(body.data));
+            }, next);
+        });
+
+        this.Post('/update-shipping/:id', (request, response, next) => {
+            return serviceDirectory.ShippingServiceClient.Put(`api/shipping/${request.body.Id}`, Shipping.Parse(request.body), (body) => {
+                return response.redirect('/admin/manage-shipping');
+            }, next);
+        });
+
+        this.Get('/update-order/:id', (request, response, next) => {
+            return serviceDirectory.OrdersServiceClient.Get(`api/order/${request.params.id}`, (body) => {
+                rendering.renderForm(request, response, 'admin/update-entity', 'Manage Order', Order.FormMetaData(), '/admin/manage-orders', Order.Parse(body.data));
+            }, next);
+        });
+
+        this.Post('/update-order/:id', (request, response, next) => {
+            return serviceDirectory.OrdersServiceClient.Put(`api/order/${request.body.Id}`, { status: request.body.Status }, (body) => {
+                return response.redirect('/admin/manage-orders');
             }, next);
         });
 
@@ -70,7 +106,8 @@ module.exports = class AdminController extends Framework.Service.Controller {
                 { 
                     entities: products,
                     entityName: products.length > 0 ? products[0].EntityName : 'Product',
-                    entityName_Plural: products.length > 0 ? products[0].EntityName : 'Products'
+                    entityName_Plural: products.length > 0 ? products[0].EntityName : 'Products',
+                    canAdd: true
                 });
               }, next);
         });
@@ -84,7 +121,8 @@ module.exports = class AdminController extends Framework.Service.Controller {
                 { 
                     entities: shippingServices,
                     entityName: shippingServices.length > 0 ? shippingServices[0].EntityName : 'Shipping',
-                    entityName_Plural: shippingServices.length > 0 ? shippingServices[0].EntityName : 'Shipping'
+                    entityName_Plural: shippingServices.length > 0 ? shippingServices[0].EntityName : 'Shipping',
+                    canAdd: true
                 });
               }, next);
         });
@@ -98,7 +136,8 @@ module.exports = class AdminController extends Framework.Service.Controller {
                 { 
                     entities: orders,
                     entityName: orders.length > 0 ? orders[0].EntityName : 'Order',
-                    entityName_Plural: orders.length > 0 ? orders[0].EntityName : 'Orders'
+                    entityName_Plural: orders.length > 0 ? orders[0].EntityName : 'Orders',
+                    canAdd: false
                 });
               }, next);
         });

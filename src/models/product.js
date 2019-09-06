@@ -1,6 +1,9 @@
 const RenderableEntity = require('./renderableEntity');
-const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
 const money = require('../util/money');
+const NumberField = require('./form/numberField');
+const TextField = require('./form/textField');
+
+const defaultImageUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kBXV6VqdDEmldnFeTtLXnOrcF2A0oF_4THg5kyQt4D8Wgvmj';
 
 module.exports = class Product extends RenderableEntity
 {
@@ -56,11 +59,24 @@ module.exports = class Product extends RenderableEntity
                 `<span>${this.Description}</span>` +
             `</div>` +
         `</div>`).replace(/"/g, '\\"');
-        console.log(render.html);
         return render
     }
 
+    static FormMetaData() {
+        return [
+            new TextField('Name', 'Product Name', true),
+            new TextField('Description', 'Product Description', true),
+            new NumberField('Price', '', true, (1).toFixed(2), 0.01),
+            new TextField('ImageUri', 'http://', false, defaultImageUri)
+        ];
+    }
+
     static Parse(dataObj) {
-        return new Product(dataObj.id, dataObj.name, dataObj.description, dataObj.price, dataObj.imageUri);
+        return new Product(
+            dataObj.Id ? dataObj.Id : dataObj.id, 
+            dataObj.Name ? dataObj.Name : dataObj.name,  
+            dataObj.Description ? dataObj.Description : dataObj.description, 
+            dataObj.Price ? dataObj.Price : dataObj.price,  
+            dataObj.ImageUri ? dataObj.ImageUri : dataObj.imageUri);
     }
 } 

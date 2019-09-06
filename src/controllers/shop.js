@@ -145,7 +145,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 const postalServiceId = parseInt(request.body.postalServiceId);
                 request.preferences.postalServiceId = postalServiceId;
 
-                return serviceDirectory.OrdersServiceClient.Put('api/order', {
+                return serviceDirectory.OrdersServiceClient.Post('api/order', {
                     order: new Order(request.cart.Items),
                     postalServiceId: postalServiceId
                 }, 
@@ -171,8 +171,10 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 response.redirect('/');
             }
             else {
-                return serviceDirectory.OrdersServiceClient.Post(`api/order/${request.params.id}`, {
-                    //payment stuff here.
+                return serviceDirectory.OrdersServiceClient.Put(`api/order/${request.params.id}`, 
+                { 
+                    status: 'Completed'
+                    //payment details
                 }, 
                 (body) => {
                     if (body.data.status === 'Completed') {
@@ -181,7 +183,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                         rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
                             status: body.data.status,
                             postalServiceName: body.data.postalService.Name,
-                            postalServiceWindow:body.data.postalService.Window
+                            postalServiceWindow: body.data.postalService.Window
                         });
                     }
                     else {

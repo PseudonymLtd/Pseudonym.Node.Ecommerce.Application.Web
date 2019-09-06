@@ -1,0 +1,22 @@
+<%- include('../includes/header.ejs') %>
+
+<script type="text/javascript">
+    (function() {
+        'use strict';
+    
+        window.addEventListener('load', function() {
+            const renderableContent = JSON.parse($("<textarea/>").html('<%= JSON.stringify(form) %>').text());
+            $(`#form-container`)[0].innerHTML = renderableContent;
+        });
+    })();
+</script>
+
+<form class="needs-validation" action="/admin<%= relativeUri %>" method="POST">
+    <div id="form-container">
+        <!-- Dynamic Content Here -->
+    </div>
+    <button type="submit" class="btn btn-warning">Add</button>
+    <a class="btn btn-secondary" href="<%= backbuttonUri %>" role="button">Cancel</a>
+</form>
+        
+<%- include('../includes/footer.ejs') %>

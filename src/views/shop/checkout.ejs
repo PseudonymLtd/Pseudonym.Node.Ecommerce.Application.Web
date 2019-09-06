@@ -50,7 +50,7 @@
 <footer class="bs-callout bs-callout-warning cartPrice">
     <p style="float: left;"><b>£<%= parseMoney(order.Total) %></b></p>
     <form method="POST" action="/shop/pay/<%= order.Id %>" style="float: right;">
-        <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= order.PostalService.Id %>">
+        <input type="hidden" id="status" name="Status" value="<%= order.Status %>">
         <button type="submit" class="btn btn-warning btn-lg">Pay</button>
         <a class="btn btn-secondary btn-lg" href="/shop/cart" role="button">Cancel</a>
     </form>

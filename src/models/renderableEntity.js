@@ -1,4 +1,5 @@
 const Framework = require('pseudonym.node.ecommerce.library.framework');
+const TextField = require('./form/textField');
 
 module.exports = class RenderableEntity extends Framework.Models.DataModel
 {
@@ -21,5 +22,11 @@ module.exports = class RenderableEntity extends Framework.Models.DataModel
             id: this.id,
             html: `<span>Entity [${this.EntityName}] Id: ${this.Id}</span>`
         }
+    }
+
+    static FormMetaData() {
+        return [
+            new TextField('Id', '', true, '')
+        ];
     }
 }
