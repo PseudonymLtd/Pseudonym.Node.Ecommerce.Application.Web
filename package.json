@@ -1,41 +1,41 @@
 {
-  "name": "pseudonym.node.ecommerce.application.web",
-  "version": "1.0.1-alpha",
-  "description": "Application Ecommerce Shop UI",
-  "main": "src/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bash ./build/start.sh",
-    "install": "bash ./build/install.sh",
-    "pub": "bash ./build/publish.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web.git"
-  },
-  "keywords": [
-    "frontEnd",
-    "UI",
-    "web",
-    "pseudonym",
-    "ecommerce"
-  ],
-  "author": "Tom Day",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web/issues"
-  },
-  "homepage": "https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web#readme",
-  "devDependencies": {
-    "nodemon": "^1.19.1"
-  },
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "bootstrap": "^4.3.1",
-    "ejs": "^2.6.2",
-    "express": "^4.17.1",
-    "jquery": "^3.4.1",
-    "popper": "^1.0.1",
-    "pseudonym.node.ecommerce.library.framework": "^1.0.0-alpha"
-  }
+    "name": "pseudonym.node.ecommerce.application.web",
+    "version": "1.0.2-alpha",
+    "description": "Application Ecommerce Shop UI",
+    "main": "src/app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "bash ./build/start.sh",
+        "install": "bash ./build/install.sh",
+        "pub": "bash ./build/publish.sh"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web.git"
+    },
+    "keywords": [
+        "frontEnd",
+        "UI",
+        "web",
+        "pseudonym",
+        "ecommerce"
+    ],
+    "author": "Tom Day",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web/issues"
+    },
+    "homepage": "https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web#readme",
+    "devDependencies": {
+        "nodemon": "^1.19.1"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "bootstrap": "^4.3.1",
+        "ejs": "^2.6.2",
+        "express": "^4.17.1",
+        "jquery": "^3.4.1",
+        "popper": "^1.0.1",
+        "pseudonym.node.ecommerce.library.framework": "^1.0.0-alpha"
+    }
 }
