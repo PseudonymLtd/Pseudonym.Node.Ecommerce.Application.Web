@@ -5,9 +5,9 @@
             "type": "node",
             "request": "launch",
             "name": "Products Service",
-            "program": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Service.Products/src/app.js",
+            "program": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Products/src/app.js",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Service.Products",
+            "cwd": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Products",
             "restart": true,
             "runtimeExecutable": "node"
         },
@@ -15,9 +15,19 @@
             "type": "node",
             "request": "launch",
             "name": "Orders Service",
-            "program": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Service.Orders/src/app.js",
+            "program": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Orders/src/app.js",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Service.Orders",
+            "cwd": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Orders",
+            "restart": true,
+            "runtimeExecutable": "node"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Shipping Service",
+            "program": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Shipping/src/app.js",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/Pseudonym.Node.Ecommerce.Application.Web/Pseudonym.Node.Ecommerce.Service.Shipping",
             "restart": true,
             "runtimeExecutable": "node"
         },
