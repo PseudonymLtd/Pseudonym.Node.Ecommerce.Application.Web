@@ -9,7 +9,10 @@ const Product = require('./models/product');
 
 const serviceRunner = new Framework.Service.Runner('Shop Application');
 
-serviceRunner.UseEjs();
+//HealthChecks
+serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Products Service', 'http://localhost:3001'));
+serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Orders Service', 'http://localhost:3002'));
+serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Shipping Service', 'http://localhost:3003'));
 
 //Redirects
 serviceRunner.Service.get('/', (request, response, next) => response.redirect('/shop'));
@@ -43,6 +46,8 @@ serviceRunner.RegisterRoute(null, (error, request, response, next) => {
 serviceRunner.RegisterRoute(null, (request, response, next) => {
     return handleError(null, request, response);
 });
+
+serviceRunner.UseEjs();
 
 const handleError = (error, request, response) => {
     const errorInfo = serviceRunner.ExceptionHandler.ProcessException(error, request);
