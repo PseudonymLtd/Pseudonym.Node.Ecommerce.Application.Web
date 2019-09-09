@@ -4,6 +4,8 @@ read -p "Version: "  version
 
 node ./build/updatePackageVersions.js "$version"
 
+npm update
+
 git add package.json -v
 git add package-lock.json -v
 
