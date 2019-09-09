@@ -1,6 +1,6 @@
 {
     "name": "pseudonym.node.ecommerce.application.web",
-    "version": "1.0.2-alpha",
+    "version": "1.1.0-alpha",
     "description": "Application Ecommerce Shop UI",
     "main": "src/app.js",
     "scripts": {
@@ -27,15 +27,15 @@
     },
     "homepage": "https://github.com/PseudonymLtd/Pseudonym.Node.Ecommerce.Application.Web#readme",
     "devDependencies": {
-        "nodemon": "^1.19.1"
+        "nodemon": "^1.19.2"
     },
     "dependencies": {
         "body-parser": "^1.19.0",
         "bootstrap": "^4.3.1",
-        "ejs": "^2.6.2",
+        "ejs": "^2.7.1",
         "express": "^4.17.1",
         "jquery": "^3.4.1",
         "popper": "^1.0.1",
-        "pseudonym.node.ecommerce.library.framework": "^1.0.0-alpha"
+        "pseudonym.node.ecommerce.library.framework": "^1.1.0-alpha"
     }
 }
