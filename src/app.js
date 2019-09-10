@@ -3,26 +3,11 @@ const AdminController = require('./controllers/admin');
 const ShopController = require('./controllers/shop');
 const AuthController = require('./controllers/auth');
 const rendering = require('./util/rendering');
-const ServiceDirectory = require('./util/serviceDirectory');
 const Cart = require('./models/cart');
 const OrderItem = require('./models/orderItem');
 const Product = require('./models/product');
 
 const serviceRunner = new Framework.Service.Runner('Shop Application');
-
-serviceRunner.Service.set('serviceDirectory', new ServiceDirectory(serviceRunner.Service));
-
-serviceRunner.Service.use((request, response, next) => {
-    request.ProductsServiceClient = request.app.get('serviceDirectory').ProductsServiceClient;
-    request.OrdersServiceClient = request.app.get('serviceDirectory').OrdersServiceClient;
-    request.ShippingServiceClient = request.app.get('serviceDirectory').ShippingServiceClient;
-    next();
-});
-
-//HealthChecks
-serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Products Service', 'http://localhost:3001'));
-serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Orders Service', 'http://localhost:3002'));
-serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck('Shipping Service', 'http://localhost:3003'));
 
 //Redirects
 serviceRunner.Service.get('/', (request, response, next) => response.redirect('/shop'));
@@ -100,4 +85,22 @@ const handleError = (error, request, response) => {
     });
 }
 
-serviceRunner.Start(3000);
+serviceRunner.Service.configurationManager.ReadValue('CompliantServices', (data, err) => {
+    if (err) {
+        throw err;
+    }
+    else {
+        for (let compliantService of data) {
+
+            let clientHandleName = `${compliantService.Name.replace(/ /g, '')}Client`;
+
+            serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck(compliantService.Name, compliantService.Uri));
+            serviceRunner.RegisterPreProcessor((request, response, complete) => {
+                request[clientHandleName] = new Framework.Utils.CompliantServiceHttpClient(compliantService.Uri, compliantService.Name, serviceRunner.Service);
+                return complete();
+            });
+
+        }
+        return serviceRunner.Start(3000);
+    }
+});
