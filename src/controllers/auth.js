@@ -11,7 +11,7 @@ module.exports = class AuthController extends Framework.Service.Controller {
 
         this.Get('/logout', (request, response, next) => {
             return request.app.authenticator.Logout(request, err => {
-                if (err) 
+                if (err)
                 {
                     return next(err);
                 }

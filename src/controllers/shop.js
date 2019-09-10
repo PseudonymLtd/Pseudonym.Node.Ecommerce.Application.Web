@@ -1,6 +1,5 @@
 const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
-const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');
 const Shipping = require('../models/shipping');
 const Order = require('../models/order');
@@ -15,7 +14,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Get('/products', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Get('api/products', (body) => {
+            return request.ProductsServiceClient.Get('api/products', (body) => {
 
                 //export dto to model
                 let products = body.data.map(b => Product.Parse(b));
@@ -48,7 +47,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         this.Get('/product/:id', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
+            return request.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
 
                 const cart = request.cart;
                 const existingOrderItem = cart.FindItem(request.params.id);
@@ -73,7 +72,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 });
             }
 
-            return serviceDirectory.ProductsServiceClient.Post('api/products', request.cart.Items.map(ci => ci.Product.Id), (body) => {
+            return request.ProductsServiceClient.Post('api/products', request.cart.Items.map(ci => ci.Product.Id), (body) => {
 
                 //update cart objects
                 syncCart(request, body.data);
@@ -83,7 +82,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     console.warn(body.additionalInformation);
                 }
 
-                return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
+                return request.ShippingServiceClient.Get('api/shipping', (body) => {
                     return rendering.render(request, response, 'shop/cart', 'Cart', {
                         postalServices: body.data.map(s => Shipping.Parse(s))
                     });
@@ -97,7 +96,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
             const cart = request.cart;
             cart.RemoveItem(request.params.id);
 
-            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
+            return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
                     postalServices: body.data.map(s => Shipping.Parse(s))
                 });
@@ -129,7 +128,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 request.cart.RemoveItem(request.params.id, existingOrderItem.Quantity - qty);
             }
 
-            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
+            return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
                     postalServices: body.data.map(s => Shipping.Parse(s))
                 });
@@ -145,7 +144,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 const postalServiceId = parseInt(request.body.postalServiceId);
                 request.preferences.postalServiceId = postalServiceId;
 
-                return serviceDirectory.OrdersServiceClient.Post('api/order', {
+                return request.OrdersServiceClient.Post('api/order', {
                     order: new Order(request.cart.Items),
                     postalServiceId: postalServiceId
                 }, 
@@ -171,7 +170,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 response.redirect('/');
             }
             else {
-                return serviceDirectory.OrdersServiceClient.Put(`api/order/${request.params.id}`, 
+                return request.OrdersServiceClient.Put(`api/order/${request.params.id}`, 
                 { 
                     status: 'Completed'
                     //payment details

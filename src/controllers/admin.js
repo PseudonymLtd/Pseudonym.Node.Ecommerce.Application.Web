@@ -1,6 +1,5 @@
 const Framework = require('pseudonym.node.ecommerce.library.framework');
 const rendering = require('../util/rendering');
-const serviceDirectory = require('../util/serviceDirectory');
 const Product = require('../models/product');
 const Shipping = require('../models/shipping');
 const Order = require('../models/order');
@@ -14,7 +13,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Post('/add-product', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Post('api/product', Product.Parse(request.body), (body) => {
+            return request.ProductsServiceClient.Post('api/product', Product.Parse(request.body), (body) => {
                 return response.redirect(`/shop/product/${body.data.id}`);
             }, next);
         });
@@ -24,13 +23,13 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Post('/add-shipping', (request, response, next) => {
-            return serviceDirectory.ShippingServiceClient.Post('api/shipping', Shipping.Parse(request.body), (body) => {
+            return request.ShippingServiceClient.Post('api/shipping', Shipping.Parse(request.body), (body) => {
                 return response.redirect('/admin/manage-shipping');
             }, next);
         });
 
         this.Get('/remove-product/:id', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Delete(`api/product/${request.params.id}`, (body) => {
+            return request.ProductsServiceClient.Delete(`api/product/${request.params.id}`, (body) => {
                 //Check for item in cart
                 const cart = request.cart;
                 cart.RemoveItem(request.params.id)
@@ -40,7 +39,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/remove-shipping/:id', (request, response, next) => {
-            return serviceDirectory.ShippingServiceClient.Delete(`api/shipping/${request.params.id}`, (body) => {
+            return request.ShippingServiceClient.Delete(`api/shipping/${request.params.id}`, (body) => {
                 //reset preferences
                 if (request.preferences.postalServiceId == request.params.id) {
                     request.preferences.postalServiceId = -1;
@@ -50,19 +49,19 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/remove-order/:id', (request, response, next) => {
-            return serviceDirectory.OrdersServiceClient.Delete(`api/order/${request.params.id}`, (body) => {
+            return request.OrdersServiceClient.Delete(`api/order/${request.params.id}`, (body) => {
                 return response.redirect('/admin/manage-orders');
             }, next);
         });
 
         this.Get('/update-product/:id', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
+            return request.ProductsServiceClient.Get(`api/product/${request.params.id}`, (body) => {
                 rendering.renderForm(request, response, 'admin/update-entity', 'Update Product', Product.FormMetaData(), '/admin/manage-products', Product.Parse(body.data));
             }, next);
         });
 
         this.Post('/update-product/:id', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Put(`api/product/${request.body.Id}`, Product.Parse(request.body), (body) => {
+            return request.ProductsServiceClient.Put(`api/product/${request.body.Id}`, Product.Parse(request.body), (body) => {
                 //Check for item in cart
                 const cart = request.cart;
                 const existingItem = cart.FindItem(body.data.id);
@@ -74,31 +73,31 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/update-shipping/:id', (request, response, next) => {
-            return serviceDirectory.ShippingServiceClient.Get(`api/shipping/${request.params.id}`, (body) => {
+            return request.ShippingServiceClient.Get(`api/shipping/${request.params.id}`, (body) => {
                 rendering.renderForm(request, response, 'admin/update-entity', 'Update Shipping Service', Shipping.FormMetaData(), '/admin/manage-shipping', Shipping.Parse(body.data));
             }, next);
         });
 
         this.Post('/update-shipping/:id', (request, response, next) => {
-            return serviceDirectory.ShippingServiceClient.Put(`api/shipping/${request.body.Id}`, Shipping.Parse(request.body), (body) => {
+            return request.ShippingServiceClient.Put(`api/shipping/${request.body.Id}`, Shipping.Parse(request.body), (body) => {
                 return response.redirect('/admin/manage-shipping');
             }, next);
         });
 
         this.Get('/update-order/:id', (request, response, next) => {
-            return serviceDirectory.OrdersServiceClient.Get(`api/order/${request.params.id}`, (body) => {
+            return request.OrdersServiceClient.Get(`api/order/${request.params.id}`, (body) => {
                 rendering.renderForm(request, response, 'admin/update-entity', 'Manage Order', Order.FormMetaData(), '/admin/manage-orders', Order.Parse(body.data));
             }, next);
         });
 
         this.Post('/update-order/:id', (request, response, next) => {
-            return serviceDirectory.OrdersServiceClient.Put(`api/order/${request.body.Id}`, { status: request.body.Status }, (body) => {
+            return request.OrdersServiceClient.Put(`api/order/${request.body.Id}`, { status: request.body.Status }, (body) => {
                 return response.redirect('/admin/manage-orders');
             }, next);
         });
 
         this.Get('/manage-products', (request, response, next) => {
-            return serviceDirectory.ProductsServiceClient.Get('api/products', (body) => {
+            return request.ProductsServiceClient.Get('api/products', (body) => {
                 const products = body.data.map(b => Product.Parse(b));
                 this.Logger.info(`Loaded ${products.length} product(s)`);
         
@@ -113,7 +112,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/manage-shipping', (request, response, next) => {
-            return serviceDirectory.ShippingServiceClient.Get('api/shipping', (body) => {
+            return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 const shippingServices = body.data.map(s => Shipping.Parse(s));
                 this.Logger.info(`Loaded ${shippingServices.length} Shipping Services`);
         
@@ -128,7 +127,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         });
 
         this.Get('/manage-orders', (request, response, next) => {
-            return serviceDirectory.OrdersServiceClient.Get('api/orders', (body) => {
+            return request.OrdersServiceClient.Get('api/orders', (body) => {
                 const orders = body.data.map(o => Order.Parse(o));
                 this.Logger.info(`Loaded ${orders.length} orders`);
         
