@@ -74,6 +74,12 @@ const handleError = (error, request, response) => {
         case 404:
             errorWrap = Framework.Service.Responder.NotFound(undefined, { requestedUri: request.Uri });
             break;
+        case 502:
+            errorWrap = Framework.Service.Responder.BadGateway(errorInfo, technicalDetails);
+            break;
+        case 503:
+            errorWrap = Framework.Service.Responder.ServiceUnavailable(errorInfo, technicalDetails);
+            break;
         default:
             errorWrap = Framework.Service.Responder.InternalServerError(errorInfo, technicalDetails);
             break;

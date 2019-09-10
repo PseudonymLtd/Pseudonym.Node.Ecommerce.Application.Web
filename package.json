@@ -1,6 +1,6 @@
 {
     "name": "pseudonym.node.ecommerce.application.web",
-    "version": "1.1.3-alpha",
+    "version": "1.1.4-alpha",
     "description": "Application Ecommerce Shop UI",
     "main": "src/app.js",
     "scripts": {
@@ -36,6 +36,6 @@
         "express": "^4.17.1",
         "jquery": "^3.4.1",
         "popper": "^1.0.1",
-        "pseudonym.node.ecommerce.library.framework": "^1.1.2-alpha"
+        "pseudonym.node.ecommerce.library.framework": "^1.1.4-alpha"
     }
 }
