@@ -42,8 +42,33 @@ serviceRunner.RegisterRoute(null, (request, response, next) => {
     return handleError(null, request, response);
 });
 
+serviceRunner.Authenticator.ChallengeHandler((request, response, next, requiredRoles, missingRoles) => {
+    return response.redirect(307, `/auth/challenge?origin=${encodeURIComponent(request.Uri.toLowerCase())}`);
+});
+
 serviceRunner.UseEjs();
 
+serviceRunner.Service.configurationManager.ReadValue('CompliantServices', (data, err) => {
+    if (err) {
+        throw err;
+    }
+    else {
+        for (let compliantService of data) {
+
+            let clientHandleName = `${compliantService.Name.replace(/ /g, '')}Client`;
+
+            serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck(compliantService.Name, compliantService.Uri));
+            serviceRunner.RegisterPreProcessor((request, response, complete) => {
+                request[clientHandleName] = new Framework.Utils.CompliantServiceHttpClient(compliantService.Uri, compliantService.Name, serviceRunner.Service);
+                return complete();
+            });
+
+        }
+        return serviceRunner.Start(3000);
+    }
+});
+
+// Helper Methods
 const handleError = (error, request, response) => {
     const errorInfo = serviceRunner.ExceptionHandler.ProcessException(error, request);
 
@@ -84,23 +109,3 @@ const handleError = (error, request, response) => {
         error: errorWrap
     });
 }
-
-serviceRunner.Service.configurationManager.ReadValue('CompliantServices', (data, err) => {
-    if (err) {
-        throw err;
-    }
-    else {
-        for (let compliantService of data) {
-
-            let clientHandleName = `${compliantService.Name.replace(/ /g, '')}Client`;
-
-            serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck(compliantService.Name, compliantService.Uri));
-            serviceRunner.RegisterPreProcessor((request, response, complete) => {
-                request[clientHandleName] = new Framework.Utils.CompliantServiceHttpClient(compliantService.Uri, compliantService.Name, serviceRunner.Service);
-                return complete();
-            });
-
-        }
-        return serviceRunner.Start(3000);
-    }
-});

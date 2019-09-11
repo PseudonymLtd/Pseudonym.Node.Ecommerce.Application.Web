@@ -1,5 +1,11 @@
 <%- include('../includes/header.ejs') %>
 
+<% if (isChallenge) { %>
+    <div class="alert alert-warning" role="alert">
+        <strong>Please log in to continue</strong>
+    </div>
+<% } %>
+
 <form class="needs-validation" action="/auth/login" method="POST">
     <div class="form-group">
         <label for="emailInput">Email Address</label>
