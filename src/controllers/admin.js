@@ -99,7 +99,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         this.Get('/manage-products', (request, response, next) => {
             return request.ProductsServiceClient.Get('api/products', (body) => {
                 const products = body.data.map(b => Product.Parse(b));
-                this.Logger.info(`Loaded ${products.length} product(s)`);
+                this.Logger.Info(`Loaded ${products.length} product(s)`);
         
                 rendering.render(request, response, 'admin/manage-entities', 'Manage Products', 
                 { 
@@ -114,7 +114,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         this.Get('/manage-shipping', (request, response, next) => {
             return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 const shippingServices = body.data.map(s => Shipping.Parse(s));
-                this.Logger.info(`Loaded ${shippingServices.length} Shipping Services`);
+                this.Logger.Info(`Loaded ${shippingServices.length} Shipping Services`);
         
                 rendering.render(request, response, 'admin/manage-entities', 'Manage Shipping', 
                 { 
@@ -129,7 +129,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
         this.Get('/manage-orders', (request, response, next) => {
             return request.OrdersServiceClient.Get('api/orders', (body) => {
                 const orders = body.data.map(o => Order.Parse(o));
-                this.Logger.info(`Loaded ${orders.length} orders`);
+                this.Logger.Info(`Loaded ${orders.length} orders`);
         
                 rendering.render(request, response, 'admin/manage-entities', 'Manage Orders', 
                 { 

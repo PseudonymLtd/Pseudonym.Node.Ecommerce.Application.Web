@@ -15,7 +15,7 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.principal = request.session.principal;
 
     response.render(path, dataObj);
-    request.app.logger.debug('Page Served');
+    request.Environment.Logger.Debug('Page Served');
 };
 
 const renderForm = (request, response, path, title, formMetaData, backbuttonUri, instance) => {

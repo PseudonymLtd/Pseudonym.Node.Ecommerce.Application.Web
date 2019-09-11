@@ -18,7 +18,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
                 //export dto to model
                 let products = body.data.map(b => Product.Parse(b));
-                this.logger.info(`Loaded ${products.length} product(s)`);
+                this.logger.Info(`Loaded ${products.length} product(s)`);
 
                 //apply search critera
                 if (request.query.Search && request.query.Search.trim() != '') {
@@ -78,7 +78,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
                 syncCart(request, body.data);
 
                 if (body.code === 206) {
-                    this.logger.warn('request for updated products from cart was only partially successful:');
+                    this.logger.Warn('request for updated products from cart was only partially successful:');
                     console.warn(body.additionalInformation);
                 }
 
