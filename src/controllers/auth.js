@@ -24,39 +24,67 @@ module.exports = class AuthController extends Framework.Service.Controller {
         });
 
         this.Get('/register', (request, response, next) => {
-            return rendering.render(request, response, 'auth/register', 'Create Account');
+            return rendering.render(request, response, 'auth/register', 'Create Account', {
+                passwordRegex: this.PasswordRegex,
+                failReason: request.query.fail
+            });
         });
 
         this.Post('/login', (request, response, next) => {
+            console.log(request.body);
 
-            const encryptedPassword = request.body.password;
+            const encrypted = request.Environment.AESManager.EncryptForPrivate(request.body.email);
+            console.log(encrypted);
 
-            request.Environment.Authenticator.Login(request, new Framework.Models.User(77, 'Frank', 'Bobson', request.body.email), ['Administrator']);
+            const decrypted = request.Environment.AESManager.DecryptFromPublic(request.body.password);
+            console.log(decrypted);
 
-            if (request.session.challengeOrigin) {
-                return http(
-                    request.session.challengeOrigin.originUri, 
-                    { 
-                        json: true, 
-                        body: request.session.challengeOrigin.originBody,
-                        method: request.session.challengeOrigin.originMethod,
-                        headers: {
-                            cookie: request.headers.cookie
-                        }
-                    },
-                    (err, res, body) => {
-                        request.session.challengeOrigin = undefined;
-
-                        return response.send(body);
-                    });
-            }
-            else {
-                return response.redirect('/');
-            }
+            return request.Environment.Authenticator.Login(request, new Framework.Models.User(77, 'Frank', 'Bobson', request.body.email), ['Administrator'], (err) => {
+                if (err) {
+                    return next(err);
+                }
+                
+                if (request.session.challengeOrigin) {
+                    return http(
+                        request.session.challengeOrigin.originUri, 
+                        { 
+                            json: true, 
+                            body: request.session.challengeOrigin.originBody,
+                            method: request.session.challengeOrigin.originMethod,
+                            headers: {
+                                cookie: request.headers.cookie
+                            }
+                        },
+                        (err, res, body) => {
+                            request.session.challengeOrigin = undefined;
+    
+                            return response.send(body);
+                        });
+                }
+                else {
+                    return response.redirect('/');
+                }
+            });
         });
 
         this.Post('/register', (request, response, next) => {
+            const decryptedPassword1 = request.Environment.AESManager.DecryptFromPublic(request.body.password[0]);
+            const decryptedPassword2 = request.Environment.AESManager.DecryptFromPublic(request.body.password[1]);
+
+            if (decryptedPassword1 !== decryptedPassword2) {
+                return response.redirect(`/auth/register?fail=${encodeURIComponent('Passwords do not match')}`);
+            }
+    
+            const regex = new RegExp(this.PasswordRegex);
+
+            if (!regex.test(decryptedPassword1)) {
+                return response.redirect(`/auth/register?fail=${encodeURIComponent('Password must adhere to the provided critera')}`);
+            }
+            
             console.log(request.body);
+
+            //create user with bcrypt
+
             return response.redirect('/');
         });
 
@@ -69,5 +97,9 @@ module.exports = class AuthController extends Framework.Service.Controller {
 
             return response.redirect('/auth/login');
         });
+    }
+
+    get PasswordRegex() {
+        return `^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\.])(?=.{8,})`;
     }
 }

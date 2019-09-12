@@ -10,6 +10,16 @@
     <script src="<%= localServerUrl %>/js/jquery.slim.min.js"></script>
     <script src="<%= localServerUrl %>/js/popper.min.js"></script>
     <script src="<%= localServerUrl %>/js/bootstrap.min.js"></script>
+    <script src="<%= localServerUrl %>/js/bundle.js"></script>
+    <script type="text/javascript">
+        const publicKey = `<%= publicKey %>`;
+        const crypto = require('crypto');
+        const Buffer = require('buffer').Buffer;
+
+        function encrypt(value) {
+            return crypto.publicEncrypt(publicKey, Buffer.from(value, 'utf-8')).toString('hex');
+        }
+    </script>
     <title><%= docTitle %></title>
 </head>
 

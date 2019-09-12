@@ -1,6 +1,51 @@
 <%- include('../includes/header.ejs') %>
 
-<form class="needs-validation" action="/auth/register" method="POST">
+<script type="text/javascript">
+    const regex = new RegExp(`<%= passwordRegex %>`);
+    
+    function validateForm(event) {
+        event.preventDefault();
+        hideAlert();
+        const form = $('#loginForm');
+        const passwordField1 = form[0][3];
+        const passwordField2 = form[0][4];
+
+        if (passwordField1.value !== passwordField2.value) {
+            alertWithMessage('Passwords do not match');
+            return;
+        }
+
+        if (!regex.test(passwordField1.value)) {
+            alertWithMessage('Password must adhere to the provided critera');
+            return;
+        }
+
+        passwordField1.value = encrypt(passwordField1.value);
+        passwordField2.value = encrypt(passwordField2.value);
+
+        form[0].onsubmit = null;
+        form.submit();
+    }
+
+    function alertWithMessage(message) {
+        $('#alertDisplay')[0].innerText = message;
+        showAlert();
+    }
+
+    function hideAlert() {
+        $('#alertDisplay')[0].style.display = 'none';
+    }
+
+    function showAlert() {
+        $('#alertDisplay')[0].style.display = 'block';
+    }
+</script>
+
+<div id="alertDisplay" class="alert alert-danger" style="display: <%= failReason === undefined ? 'none' : 'block' %>;" role="alert">
+    <%= failReason %>
+</div>
+
+<form id="loginForm" class="needs-validation" onsubmit="validateForm(event);" action="/auth/register" method="POST">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="firstnameInput">First Name</label>
@@ -31,7 +76,7 @@
         </small>
     </div>
     <div class="form-group">
-        <label for="password2Input">Repeat Password</label>
+        <label for="password2Input">Confirm Password</label>
         <input class="form-control" id="password2Input" type="password" name="password" required />
     </div>
     <button type="submit" class="btn btn-warning">Register</button>

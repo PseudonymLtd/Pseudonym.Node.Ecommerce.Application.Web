@@ -1,12 +1,23 @@
 <%- include('../includes/header.ejs') %>
 
+<script type="text/javascript">
+    function hashForm(event) {
+        event.preventDefault();
+        const form = $('#loginForm');
+        const passwordField = form[0][1];
+        passwordField.value = encrypt(passwordField.value);
+        form[0].onsubmit = null;
+        form.submit(); 
+    }
+</script>
+
 <% if (isChallenge) { %>
     <div class="alert alert-warning" role="alert">
         <strong>Please log in to continue</strong>
     </div>
 <% } %>
 
-<form class="needs-validation" action="/auth/login" method="POST">
+<form id="loginForm" class="needs-validation" onsubmit="hashForm(event);" action="/auth/login" method="POST">
     <div class="form-group">
         <label for="emailInput">Email Address</label>
         <input class="form-control" id="emailInput" type="email" name="email" placeholder="example@shop.co.uk" required />

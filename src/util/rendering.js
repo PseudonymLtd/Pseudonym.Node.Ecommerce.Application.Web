@@ -13,6 +13,7 @@ const render = (request, response, path, title, dataObj) =>
     dataObj.preferences = request.preferences;
     dataObj.parseMoney = money.Parse;
     dataObj.principal = request.session.principal;
+    dataObj.publicKey = request.Environment.AESManager.KeyStore.PublicKey;
 
     response.render(path, dataObj);
     request.Environment.Logger.Debug('Page Served');
