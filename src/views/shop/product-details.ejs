@@ -18,11 +18,11 @@
     <form class="needs-validation" action="/shop/cart" method="POST">
         <div class="form-group" style="display: inline-flex;">
             <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="1" min="1" max="100" style="width: 62px; margin-right: 10px;" required/>
-            <input type="hidden" id="id" name="id" value="<%= product.Id %>">
-            <input type="hidden" id="name" name="name" value="<%= product.Name %>">
-            <input type="hidden" id="description" name="description" value="<%= product.Description %>">
-            <input type="hidden" id="price" name="price" value="<%= product.Price %>">
-            <input type="hidden" id="imageUri" name="imageUri" value="<%= product.iIageUri %>">
+            <input type="hidden" id="Id" name="Id" value="<%= product.Id %>">
+            <input type="hidden" id="Name" name="Name" value="<%= product.Name %>">
+            <input type="hidden" id="Description" name="Description" value="<%= product.Description %>">
+            <input type="hidden" id="Price" name="Price" value="<%= product.Price %>">
+            <input type="hidden" id="ImageUri" name="ImageUri" value="<%= product.iIageUri %>">
             <button type="submit" class="btn btn-warning">Add to Cart</button>
         </div>
     </form>

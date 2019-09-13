@@ -14,7 +14,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
 
         this.Post('/add-product', (request, response, next) => {
             return request.ProductsServiceClient.Post('api/product', Product.Parse(request.body), (body) => {
-                return response.redirect(`/shop/product/${body.data.id}`);
+                return response.redirect(`/shop/product/${body.data._id}`);
             }, next);
         });
 
@@ -41,8 +41,8 @@ module.exports = class AdminController extends Framework.Service.Controller {
         this.Get('/remove-shipping/:id', (request, response, next) => {
             return request.ShippingServiceClient.Delete(`api/shipping/${request.params.id}`, (body) => {
                 //reset preferences
-                if (request.preferences.postalServiceId == request.params.id) {
-                    request.preferences.postalServiceId = -1;
+                if (request.preferences.shippingId == request.params.id) {
+                    request.preferences.shippingId = -1;
                 }
                 return response.redirect('/admin/manage-shipping');
             }, next);
@@ -64,7 +64,7 @@ module.exports = class AdminController extends Framework.Service.Controller {
             return request.ProductsServiceClient.Put(`api/product/${request.body.Id}`, Product.Parse(request.body), (body) => {
                 //Check for item in cart
                 const cart = request.cart;
-                const existingItem = cart.FindItem(body.data.id);
+                const existingItem = cart.FindItem(body.data._id);
                 if (existingItem) {
                     existingItem.Product.Price = body.data.price;
                 }

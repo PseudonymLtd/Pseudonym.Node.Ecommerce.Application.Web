@@ -68,14 +68,14 @@ module.exports = class ShopController extends Framework.Service.Controller {
         this.Get('/cart', (request, response, next) => {
             if (request.cart.IsEmpty) {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
-                    postalServices: []
+                    shippingServices: []
                 });
             }
 
             return request.ProductsServiceClient.Post('api/products', request.cart.Items.map(ci => ci.Product.Id), (body) => {
 
                 //update cart objects
-                syncCart(request, body.data);
+                syncCart(request, body.data.map(p => Product.Parse(p)));
 
                 if (body.code === 206) {
                     this.logger.Warn('request for updated products from cart was only partially successful:');
@@ -84,11 +84,10 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
                 return request.ShippingServiceClient.Get('api/shipping', (body) => {
                     return rendering.render(request, response, 'shop/cart', 'Cart', {
-                        postalServices: body.data.map(s => Shipping.Parse(s))
+                        shippingServices: body.data.map(s => Shipping.Parse(s))
                     });
                 }, next);
 
-                
             }, next);
         });
 
@@ -98,7 +97,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
             return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
-                    postalServices: body.data.map(s => Shipping.Parse(s))
+                    shippingServices: body.data.map(s => Shipping.Parse(s))
                 });
             }, next);
         });
@@ -122,7 +121,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
         this.Post('/cart/product/:id', (request, response, next) => {
 
-            const qty = parseInt(request.body.quantity);
+            const qty = parseInt(request.body.Quantity);
             const existingOrderItem = request.cart.FindItem(request.params.id);
             if (existingOrderItem) {
                 request.cart.RemoveItem(request.params.id, existingOrderItem.Quantity - qty);
@@ -130,7 +129,7 @@ module.exports = class ShopController extends Framework.Service.Controller {
 
             return request.ShippingServiceClient.Get('api/shipping', (body) => {
                 return rendering.render(request, response, 'shop/cart', 'Cart', {
-                    postalServices: body.data.map(s => Shipping.Parse(s))
+                    shippingServices: body.data.map(s => Shipping.Parse(s))
                 });
             }, next);
         });
@@ -141,25 +140,15 @@ module.exports = class ShopController extends Framework.Service.Controller {
             }
             else {
 
-                const postalServiceId = parseInt(request.body.postalServiceId);
-                request.preferences.postalServiceId = postalServiceId;
+                request.preferences.shippingId = request.body.shippingId;
 
                 return request.OrdersServiceClient.Post('api/order', {
                     order: new Order(request.cart.Items),
-                    postalServiceId: postalServiceId
+                    shippingId: request.body.shippingId
                 }, 
                 (body) => {
-
-                    const order = new Order(body.data.items.map(
-                        i => new OrderItem(
-                            new Product(i.productId, i.productName, null, i.pricePerItem, null),
-                             i.quantity)));
-                    order.Id = body.data.id;
-                    order.VatInfo = body.data.vatInfo;
-                    order.PostalService = body.data.postalService;
-
-                    rendering.render(request, response, 'shop/checkout', 'Checkout', {
-                        order: order
+                    return rendering.render(request, response, 'shop/checkout', 'Checkout', {
+                        order: Order.Parse(body.data)
                     });
                 }, next);
             }
@@ -176,18 +165,18 @@ module.exports = class ShopController extends Framework.Service.Controller {
                     //payment details
                 }, 
                 (body) => {
-                    if (body.data.status === 'Completed') {
+                    if (body.data._status === 'Completed') {
                         request.cart.Reset();
 
                         rendering.render(request, response, 'shop/order-successful', 'Order Complete', {
-                            status: body.data.status,
-                            postalServiceName: body.data.postalService.Name,
-                            postalServiceWindow: body.data.postalService.Window
+                            status: body.data._status,
+                            shippingName: body.data._shipping._name,
+                            shippingWindow: body.data._shipping._window
                         });
                     }
                     else {
                         rendering.render(request, response, 'shop/order-unsuccessful', 'Order Unsuccessful', {
-                            status: body.data.status
+                            status: body.data._status
                         });
                     }
                 }, next);
@@ -195,15 +184,13 @@ module.exports = class ShopController extends Framework.Service.Controller {
         });
 
         const syncCart = (request, products) => {
-            const cart = request.cart;
-
-            for (let item of cart.Items) {
-                const product = products.find(p => p.id === item.Product.Id);
+            for (let item of request.cart.Items) {
+                const product = products.find(p => p.Id === item.Product.Id);
                 if (product) {
                     item.Product = Product.Parse(product);
                 }
                 else {
-                    cart.RemoveItem(item.Product.Id);
+                    request.cart.RemoveItem(item.Product.Id);
                 }
             }
         }

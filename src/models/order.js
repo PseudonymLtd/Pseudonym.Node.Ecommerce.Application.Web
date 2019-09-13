@@ -18,14 +18,6 @@ module.exports = class Order extends RenderableEntity
         this.items = [...items];
     }
 
-    get Id() {
-        return this.id;
-    }
-
-    set Id(value) {
-        return this.id = parseInt(value);
-    }
-
     get Items() {
         return this.items;
     }
@@ -39,15 +31,15 @@ module.exports = class Order extends RenderableEntity
     }
 
     get Total() {
-        return this.SubTotal + this.VAT + this.PostalService.Price;
+        return this.SubTotal + this.VAT + this.Shipping.Price;
     }
 
-    get PostalService() {
-        return this.postalService;
+    get Shipping() {
+        return this.shipping;
     }
 
-    set PostalService(value) {
-        return this.postalService = value;
+    set Shipping(value) {
+        return this.shipping = value;
     }
 
     get VatInfo() {
@@ -107,10 +99,10 @@ module.exports = class Order extends RenderableEntity
         render.html +=
         '<div class="row align-items-center justify-content-between">' +      
             '<div class="col align-self-center">' +
-                `<span>Postage & Packaging - ${this.PostalService.Name}</span>` +
+                `<span>Postage & Packaging - ${this.Shipping.Name}</span>` +
             '</div>' +
             '<div class="col align-self-center" style="text-align: right;">' +
-                `<span>£${money.Parse(this.PostalService.Price)}</span>` +
+                `<span>£${money.Parse(this.Shipping.Price)}</span>` +
             '</div>' +
         '</div>';
 
@@ -137,11 +129,11 @@ module.exports = class Order extends RenderableEntity
     }
 
     static Parse(dataObj) {
-        const order = new Order(dataObj.items.map(i => new OrderItem(new Product(i.productId, i.productName, undefined, i.pricePerItem, undefined), i.quantity)));
-        order.PostalService = new Shipping(dataObj.postalService.Id, dataObj.postalService.Name, dataObj.postalService.Window, dataObj.postalService.Price);
-        order.Status = dataObj.status;
-        order.VatInfo = dataObj.vatInfo;
-        order.Id = dataObj.id;
+        const order = new Order(dataObj._items.map(i => new OrderItem(new Product(i._productId, i._productName, undefined, i._pricePerItem, undefined), i._quantity)));
+        order.Shipping = new Shipping(dataObj._shipping._Id, dataObj._shipping._name, dataObj._shipping._window, dataObj._shipping._price);
+        order.Status = dataObj._status;
+        order.VatInfo = dataObj._vatInfo;
+        order.Id = dataObj._id;
         return order;
     }
 }

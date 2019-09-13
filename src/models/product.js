@@ -73,10 +73,10 @@ module.exports = class Product extends RenderableEntity
 
     static Parse(dataObj) {
         return new Product(
-            dataObj.Id ? dataObj.Id : dataObj.id, 
-            dataObj.Name ? dataObj.Name : dataObj.name,  
-            dataObj.Description ? dataObj.Description : dataObj.description, 
-            dataObj.Price ? dataObj.Price : dataObj.price,  
-            dataObj.ImageUri ? dataObj.ImageUri : dataObj.imageUri);
+            dataObj.Id ? dataObj.Id : dataObj._id, 
+            dataObj.Name ? dataObj.Name : dataObj._name,  
+            dataObj.Description ? dataObj.Description : dataObj._description, 
+            dataObj.Price ? dataObj.Price : dataObj._price,  
+            dataObj.ImageUri ? dataObj.ImageUri : dataObj._imageUri);
     }
 } 

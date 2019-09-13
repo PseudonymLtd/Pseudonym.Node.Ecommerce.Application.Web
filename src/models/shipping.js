@@ -57,9 +57,9 @@ module.exports = class Shipping extends RenderableEntity
 
     static Parse(dataObj) {
         return new Shipping(
-            dataObj.Id ? dataObj.Id : dataObj.id,
-            dataObj.Name ? dataObj.Name : dataObj.name,
-            dataObj.Window ? dataObj.Window : dataObj.window,
-            dataObj.Price ? dataObj.Price : dataObj.price);
+            dataObj.Id ? dataObj.Id : dataObj._id,
+            dataObj.Name ? dataObj.Name : dataObj._name,
+            dataObj.Window ? dataObj.Window : dataObj._window,
+            dataObj.Price ? dataObj.Price : dataObj._price);
     }
 }

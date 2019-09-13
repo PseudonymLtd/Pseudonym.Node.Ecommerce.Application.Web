@@ -4,10 +4,10 @@
 (function() {
     'use strict';
 
-    const postalServices = JSON.parse($("<textarea/>").html('<%= JSON.stringify(postalServices) %>').text());
-    const previousPostalService = '<%= preferences.postalServiceId %>';
+    const shippingServices = JSON.parse($("<textarea/>").html('<%= JSON.stringify(shippingServices) %>').text());
+    const previousShippingId = '<%= preferences.shippingId %>';
 
-    let selectedPostalServiceId = parseInt(previousPostalService);
+    let selectedShippingId = previousShippingId;
 
     window.addEventListener('load', function() {
         $('#postalDropdown').on('hidden.bs.dropdown', function (event) {
@@ -18,14 +18,15 @@
                 const source = event.clickEvent.originalEvent.srcElement;
                 source.classList.add('active');
 
-                selectedPostalServiceId = parseInt(source.id.split('-')[1]);
+                selectedShippingId = source.id.split('-')[1];
 
-                const service = postalServices.find(p => p.id === selectedPostalServiceId);
+                console.log(shippingServices);
+                const service = shippingServices.find(p => p.id === selectedShippingId);
 
                 $('#postalCost')[0].innerText = service.price.toFixed(2);
                 $('#postalDropDownTitle')[0].innerText = source.innerText;
                 $('#checkoutBtn')[0].disabled = false;
-                $('#postalServiceId')[0].value = selectedPostalServiceId;
+                $('#shippingId')[0].value = selectedShippingId;
             }
         });
     });
@@ -67,7 +68,7 @@
                         <div class="col align-self-center" style="text-align: right;">
                             <form class="needs-validation" action="/shop/cart/product/<%= item.Product.Id %>" method="POST">
                                 <div class="form-group" style="display: inline-flex;">
-                                    <input class="form-control" id="quantityInput" type="number" name="quantity" step="1" value="<%= item.Quantity %>" min="1" style="width: 62px; margin-right: 10px;" required/>
+                                    <input class="form-control" id="quantityInput" type="number" name="Quantity" step="1" value="<%= item.Quantity %>" min="1" style="width: 62px; margin-right: 10px;" required/>
                                     <button type="submit" class="btn btn-warning">Update</button>
                                     <a style="margin-left: 8px;" class="btn btn-secondary" href="/shop/cart/product/<%= item.Product.Id %>" role="button">Remove</a>
                                 </div>
@@ -86,15 +87,15 @@
             <hr class="my-2">
             <div id="postalDropdown" class="dropdown">
                 <a id="postalDropDownTitle" class="btn btn-warning dropdown-toggle" style="width: 377px;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <% if (postalServices.map(ps => ps.Id).includes(preferences.postalServiceId)) { const preferredService = postalServices.find(p => p.Id === preferences.postalServiceId); %>
+                    <% if (shippingServices.map(ps => ps.Id).includes(preferences.shippingId)) { const preferredService = shippingServices.find(p => p.Id === preferences.shippingId); %>
                         <%= preferredService.Name %> - <%= preferredService.Window %> (£<%= preferredService.Price %>)
                     <% } else { %>
                         Select a Postal Service
                     <% } %>                        
                 </a>
                 <div id="postalDropdownItems" class="dropdown-menu" aria-labelledby="postalDropdown">
-                    <% for (let service of postalServices) { %>
-                        <option id="postalDropdownItems-<%= service.Id %>" class="dropdown-item <%= preferences.postalServiceId === service.Id ? 'active' : '' %>"><%= service.Name %> - <%= service.Window %> (£<%= service.Price %>)</option>
+                    <% for (let service of shippingServices) { %>
+                        <option id="postalDropdownItems-<%= service.Id %>" class="dropdown-item <%= preferences.shippingId === service.Id ? 'active' : '' %>"><%= service.Name %> - <%= service.Window %> (£<%= service.Price %>)</option>
                     <% } %>
                 </div>
             </div>
@@ -107,7 +108,7 @@
             <b>£<%= parseMoney(cart.SubTotal) %></b>
             <span class="text-muted" style="font-size: small;">
                 <span id="postalCost">
-                    <% if (postalServices.map(ps => ps.Id).includes(preferences.postalServiceId)) { const preferredService = postalServices.find(p => p.Id === preferences.postalServiceId); %>
+                    <% if (shippingServices.map(ps => ps.Id).includes(preferences.shippingId)) { const preferredService = shippingServices.find(p => p.Id === preferences.shippingId); %>
                         + £<%= preferredService.Price %>
                     <% } else { %>
                         + £0.00
@@ -116,8 +117,8 @@
             </span>
         </p>
         <form method="POST" action="/shop/checkout" style="float: right;">
-            <input type="hidden" id="postalServiceId" name="postalServiceId" value="<%= postalServices.map(ps => ps.Id).includes(preferences.postalServiceId) ? preferences.postalServiceId : 0 %>">
-            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg" <%= postalServices.map(ps => ps.Id).includes(preferences.postalServiceId) ? '' : 'disabled' %>>Checkout</button>
+            <input type="hidden" id="shippingId" name="shippingId" value="<%= shippingServices.map(ps => ps.Id).includes(preferences.shippingId) ? preferences.shippingId : 0 %>">
+            <button type="submit" id="checkoutBtn" class="btn btn-warning btn-lg" <%= shippingServices.map(ps => ps.Id).includes(preferences.shippingId) ? '' : 'disabled' %>>Checkout</button>
             <a class="btn btn-secondary btn-lg" href="/shop/products" role="button">Continue Shopping</a>
         </form>
     </footer> 

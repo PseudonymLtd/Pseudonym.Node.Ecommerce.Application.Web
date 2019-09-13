@@ -27,7 +27,7 @@ module.exports = class Cart
     }
 
     FindItem(productId) {
-        return this.items.find(ci => ci.Product.Id == parseInt(productId));
+        return this.items.find(ci => ci.Product.Id == productId);
     }
 
     AddItem(product, quantity) {

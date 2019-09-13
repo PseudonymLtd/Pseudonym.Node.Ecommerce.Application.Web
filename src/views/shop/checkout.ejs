@@ -30,10 +30,10 @@
         <div class="container-fluid" style="padding: 0">
             <div class="row align-items-center justify-content-between">
                 <div class="col align-self-center">
-                    <span>Postage & Packaging - <%= order.PostalService.Name %></span>
+                    <span>Postage & Packaging - <%= order.Shipping.Name %></span>
                 </div>
                 <div class="col align-self-center" style="text-align: right;">
-                    <span>£<%= parseMoney(order.PostalService.Price) %></span>
+                    <span>£<%= parseMoney(order.Shipping.Price) %></span>
                 </div>
             </div>
         </div>

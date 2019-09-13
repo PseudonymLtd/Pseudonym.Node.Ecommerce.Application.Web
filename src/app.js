@@ -22,7 +22,7 @@ serviceRunner.RegisterCookie(
             i.quantity))),
     true);
 
-serviceRunner.RegisterCookie('preferences', () => Object.create({ postalServiceId: -1 }), (p) => p, false);
+serviceRunner.RegisterCookie('preferences', () => Object.create({ shippingId: -1 }), (p) => p, false);
 
 //Statics
 serviceRunner.RegisterStatic('/', 'public');
