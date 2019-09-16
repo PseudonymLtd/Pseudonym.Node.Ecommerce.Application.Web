@@ -37,6 +37,6 @@
         "express": "^4.17.1",
         "jquery": "^3.4.1",
         "popper": "^1.0.1",
-        "pseudonym.node.ecommerce.library.framework": "^1.2.2-alpha"
+        "pseudonym.node.ecommerce.library.framework": "^1.2.4-alpha.1"
     }
 }

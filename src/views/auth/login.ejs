@@ -15,16 +15,20 @@
     <div class="alert alert-warning" role="alert">
         <strong>Please log in to continue</strong>
     </div>
+<% } else if (invalidCredentials) { %>
+    <div class="alert alert-warning" role="alert">
+        <strong>Invalid Credentials</strong>
+    </div> 
 <% } %>
 
 <form id="loginForm" class="needs-validation" onsubmit="hashForm(event);" action="/auth/login" method="POST">
     <div class="form-group">
         <label for="emailInput">Email Address</label>
-        <input class="form-control" id="emailInput" type="email" name="email" placeholder="example@shop.co.uk" required />
+        <input class="form-control" id="emailInput" type="mail" name="Email" placeholder="example@shop.co.uk" required />
     </div>
     <div class="form-group">
         <label for="passwordInput">Password</label>
-        <input class="form-control" id="passwordInput" type="password" name="password" aria-describedby="passwordHelp" required />
+        <input class="form-control" id="passwordInput" type="password" name="Password" aria-describedby="passwordHelp" required />
     </div>
     <button type="submit" class="btn btn-warning">Login</button>
     <a href="/auth/register" class="btn btn-secondary">Register</a>

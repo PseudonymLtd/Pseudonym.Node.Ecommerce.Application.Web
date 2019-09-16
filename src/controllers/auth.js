@@ -9,7 +9,8 @@ module.exports = class AuthController extends Framework.Service.Controller {
 
         this.Get('/login', (request, response, next) => {
             return rendering.render(request, response, 'auth/login', 'Login',{
-                isChallenge: request.session.challengeOrigin !== undefined
+                isChallenge: request.session.challengeOrigin !== undefined,
+                invalidCredentials : request.query.invalidCredentials
             });
         });
 
@@ -31,40 +32,60 @@ module.exports = class AuthController extends Framework.Service.Controller {
         });
 
         this.Post('/login', (request, response, next) => {
-            console.log(request.body);
+            return request.AuthServiceClient.Head('api/health/warmup', (body) => {
+                const encryptedPassword = request.Environment.AESManager.EncryptForPrivate(
+                    request.Environment.AESManager.DecryptFromPublic(request.body.Password),
+                    request.AuthServiceClient.CompliantServicePublicKey);
 
-            const encrypted = request.Environment.AESManager.EncryptForPrivate(request.body.email);
-            console.log(encrypted);
-
-            const decrypted = request.Environment.AESManager.DecryptFromPublic(request.body.password);
-            console.log(decrypted);
-
-            return request.Environment.Authenticator.Login(request, new Framework.Models.User(77, 'Frank', 'Bobson', request.body.email), ['Administrator'], (err) => {
-                if (err) {
-                    return next(err);
-                }
-                
-                if (request.session.challengeOrigin) {
-                    return http(
-                        request.session.challengeOrigin.originUri, 
-                        { 
-                            json: true, 
-                            body: request.session.challengeOrigin.originBody,
-                            method: request.session.challengeOrigin.originMethod,
-                            headers: {
-                                cookie: request.headers.cookie
-                            }
-                        },
-                        (err, res, body) => {
-                            request.session.challengeOrigin = undefined;
-    
-                            return response.send(body);
+                return request.AuthServiceClient.Post('auth/login', 
+                    {
+                        Index: request.body.Email,
+                        Type: 'User',
+                        Password: encryptedPassword
+                    }, 
+                    (body) => {
+                        const identity = body.data;
+                        return request.Environment.Authenticator.Login(request, 
+                            new Framework.Models.User(identity._id, identity._firstname, identity._lastname, identity._email),
+                            identity._roles.map(r => r._name), 
+                            (err) => {
+                                if (err) {
+                                    return next(err);
+                                }
+                                
+                                if (request.session.challengeOrigin) {
+                                    return http(
+                                        request.session.challengeOrigin.originUri, 
+                                        { 
+                                            json: true, 
+                                            body: request.session.challengeOrigin.originBody,
+                                            method: request.session.challengeOrigin.originMethod,
+                                            headers: {
+                                                cookie: request.headers.cookie
+                                            }
+                                        },
+                                        (err, res, body) => {
+                                            request.session.challengeOrigin = undefined;
+                    
+                                            return response.send(body);
+                                        });
+                                }
+                                else {
+                                    return response.redirect('/');
+                                }
                         });
-                }
-                else {
-                    return response.redirect('/');
-                }
-            });
+                    }, 
+                    (err) => {
+                        if (err.code === 401) {
+                            request.Environment.Logger.Debug('Authentication Failed:');
+                            console.debug(err);
+                            return response.redirect('/auth/login?invalidCredentials=true');
+                        }
+                        else {
+                            return next(err);
+                        }
+                    });
+            }, next)
         });
 
         this.Post('/register', (request, response, next) => {
@@ -81,11 +102,19 @@ module.exports = class AuthController extends Framework.Service.Controller {
                 return response.redirect(`/auth/register?fail=${encodeURIComponent('Password must adhere to the provided critera')}`);
             }
             
-            console.log(request.body);
-
-            //create user with bcrypt
-
-            return response.redirect('/');
+            return request.AuthServiceClient.Head('api/health/warmup', (body) => {
+                const encryptedPassword = request.Environment.AESManager.EncryptForPrivate(decryptedPassword1, request.AuthServiceClient.CompliantServicePublicKey);
+                return request.AuthServiceClient.Post('api/user', 
+                    {
+                        Firstname: request.body.firstname,
+                        Lastname: request.body.lastname,
+                        Email: request.body.email,
+                        Password: encryptedPassword
+                    }, 
+                    (body) => {
+                        return response.redirect('/');
+                    }, next);
+            }, next);
         });
 
         this.Use('/challenge', (request, response, next) => {

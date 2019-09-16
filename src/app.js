@@ -53,13 +53,16 @@ serviceRunner.Service.configurationManager.ReadValue('CompliantServices', (data,
         throw err;
     }
     else {
+        serviceRunner.Service.set('compliantServices', {});
+        const compliantServiceStore = serviceRunner.Service.get('compliantServices');
         for (let compliantService of data) {
 
             let clientHandleName = `${compliantService.Name.replace(/ /g, '')}Client`;
 
             serviceRunner.RegisterDependencyHealthCheck(new Framework.Service.CompliantServiceDependencyCheck(compliantService.Name, compliantService.Uri));
+            compliantServiceStore[clientHandleName] = new Framework.Utils.CompliantServiceHttpClient(compliantService.Uri, compliantService.Name, serviceRunner.Service);
             serviceRunner.RegisterPreProcessor((request, response, complete) => {
-                request[clientHandleName] = new Framework.Utils.CompliantServiceHttpClient(compliantService.Uri, compliantService.Name, serviceRunner.Service);
+                request[clientHandleName] = compliantServiceStore[clientHandleName];
                 return complete();
             });
 
