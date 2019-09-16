@@ -67,7 +67,15 @@ serviceRunner.Service.configurationManager.ReadValue('CompliantServices', (data,
             });
 
         }
-        return serviceRunner.Start(3000);
+        
+        serviceRunner.UseConfiguredLogin((err) => {
+            if (err) {
+                throw err;
+            }
+            else {
+                return serviceRunner.Start(3000);
+            }
+        });
     }
 });
 
